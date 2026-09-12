@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   FlaskConical, 
   Play, 
@@ -10,7 +10,8 @@ import {
   CheckCircle2, 
   Layers, 
   Lock,
-  ArrowRight
+  Activity,
+  Zap
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Vulnerability } from '../types/security';
@@ -32,11 +33,20 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
   const [isPatchedMode, setIsPatchedMode] = useState<boolean>(false);
   const [customPayload, setCustomPayload] = useState<string>('http://169.254.169.254/latest/meta-data/iam/security-credentials/');
   const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
   const [logs, setLogs] = useState<string[]>([
     '[*] Sandbox ready. Select target vulnerability and defense state to simulate safe PoC execution.',
     '[*] Compliant with NTRO ethical hacking constraints (controlled test harness).'
   ]);
   const [resultStatus, setResultStatus] = useState<'IDLE' | 'VULNERABLE' | 'BLOCKED'>('IDLE');
+
+  const terminalEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (terminalEndRef.current) {
+      terminalEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [logs]);
 
   const selectedVuln = vulnerabilities.find(v => v.id === selectedId) || vulnerabilities[0];
 
@@ -57,10 +67,26 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
       { label: 'Target Maritime Watchlist', value: 'ws_ntro_maritime_01' },
       { label: 'Own Assigned Workspace', value: 'ws_user_own_4491' }
     ],
+    'WM-2026-004': [
+      { label: 'Extract Remote MCP Tokens', value: 'document.modelContext.getTool("getWorldMonitorMcpEndpoint").execute()' },
+      { label: 'Cross-Origin Nav Hijack', value: 'launchWorldMonitor({ monitor: "constructor" })' }
+    ],
+    'WM-2026-005': [
+      { label: 'CORS Preflight Flooding', value: 'OPTIONS /mcp Origin: https://unauthorized-agent-domain.com' },
+      { label: 'Rapid Tool RPC Polling (500 req)', value: 'POST /mcp {"jsonrpc":"2.0","method":"tools/list"}' }
+    ],
+    'WM-2026-006': [
+      { label: 'Regex Search AISStream Token', value: 'assets/welcome-*.js -> /aisstream[-_]?key/i' },
+      { label: 'Regex Search Finnhub Token', value: 'assets/welcome-*.js -> /finnhub[-_]?token/i' }
+    ],
     'WM-2026-007': [
-      { label: 'Prototype Pollution __proto__ injection', value: '{"__proto__": {"isAdmin": true, "telemetryBypass": true}}' },
-      { label: 'Constructor Prototype Traversal', value: '{"constructor": {"prototype": {"polluted": true}}}' },
+      { label: 'Prototype Pollution __proto__', value: '{"__proto__": {"isAdmin": true, "telemetryBypass": true}}' },
+      { label: 'Constructor Prototype Poison', value: '{"constructor": {"prototype": {"polluted": true}}}' },
       { label: 'Clean GeoJSON Coordinates', value: '{"type": "Feature", "properties": {"name": "Suez Chokepoint"}}' }
+    ],
+    'WM-2026-008': [
+      { label: 'Inject with Static Nonce', value: '<script nonce="wm-static-bootstrap">alert(document.domain)</script>' },
+      { label: 'Random Nonce Injection Probe', value: '<script nonce="random-attacker-nonce-991">alert(1)</script>' }
     ]
   };
 
@@ -69,7 +95,9 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
   ];
 
   const handleRunSimulation = () => {
+    if (isRunning) return;
     setIsRunning(true);
+    setProgress(10);
     setResultStatus('IDLE');
     setLogs([
       `[*] Initializing Safe Controlled Sandbox environment for [${selectedVuln.id}]...`,
@@ -78,9 +106,22 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
       `[*] Dispatching probe payload: ${customPayload}`
     ]);
 
+    // Step 1
     setTimeout(() => {
+      setProgress(40);
+      setLogs(prev => [...prev, '[>] Step 1: Synthesizing HTTP request in isolated test harness...']);
+    }, 300);
+
+    // Step 2
+    setTimeout(() => {
+      setProgress(70);
+      setLogs(prev => [...prev, '[>] Step 2: Evaluating input against security interceptors...']);
+    }, 600);
+
+    // Final Outcome
+    setTimeout(() => {
+      setProgress(100);
       if (selectedVuln.id === 'WM-2026-001') {
-        // SSRF Simulation
         if (isPatchedMode) {
           const isAllowed = customPayload.startsWith('https://acleddata.com') || customPayload.startsWith('https://api.aisstream.io');
           if (isAllowed) {
@@ -103,7 +144,7 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
             ]);
             setResultStatus('BLOCKED');
             onMitigate(selectedVuln.id);
-            confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+            try { confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } }); } catch (e) {}
           }
         } else {
           setLogs(prev => [
@@ -117,7 +158,6 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
           setResultStatus('VULNERABLE');
         }
       } else if (selectedVuln.id === 'WM-2026-002') {
-        // Stored DOM XSS Simulation
         if (isPatchedMode) {
           setLogs(prev => [
             ...prev,
@@ -129,7 +169,7 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
           ]);
           setResultStatus('BLOCKED');
           onMitigate(selectedVuln.id);
-          confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+          try { confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } }); } catch (e) {}
         } else {
           setLogs(prev => [
             ...prev,
@@ -140,7 +180,6 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
           setResultStatus('VULNERABLE');
         }
       } else if (selectedVuln.id === 'WM-2026-003') {
-        // BOLA Simulation
         if (isPatchedMode) {
           if (customPayload === 'ws_user_own_4491') {
             setLogs(prev => [
@@ -159,7 +198,7 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
             ]);
             setResultStatus('BLOCKED');
             onMitigate(selectedVuln.id);
-            confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+            try { confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } }); } catch (e) {}
           }
         } else {
           setLogs(prev => [
@@ -172,7 +211,6 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
           setResultStatus('VULNERABLE');
         }
       } else {
-        // Generic Simulation
         if (isPatchedMode) {
           setLogs(prev => [
             ...prev,
@@ -182,7 +220,7 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
           ]);
           setResultStatus('BLOCKED');
           onMitigate(selectedVuln.id);
-          confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+          try { confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } }); } catch (e) {}
         } else {
           setLogs(prev => [
             ...prev,
@@ -193,7 +231,7 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
         }
       }
       setIsRunning(false);
-    }, 1200);
+    }, 1100);
   };
 
   return (
@@ -241,6 +279,7 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
                     onClick={() => {
                       setSelectedId(vuln.id);
                       setCustomPayload(presetPayloads[vuln.id]?.[0]?.value || 'test_payload');
+                      setResultStatus('IDLE');
                     }}
                     className={`w-full text-left p-3 rounded-lg border transition-all flex items-center justify-between ${
                       isSelected
@@ -280,26 +319,32 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
 
             <div className="grid grid-cols-2 gap-2 bg-soc-bg p-1.5 rounded-lg border border-soc-border">
               <button
-                onClick={() => setIsPatchedMode(false)}
-                className={`py-2 px-3 rounded-md font-mono text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                onClick={() => {
+                  setIsPatchedMode(false);
+                  setResultStatus('IDLE');
+                }}
+                className={`py-2.5 px-3 rounded-md font-mono text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                   !isPatchedMode
                     ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50 shadow-glow-red'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+                <ShieldAlert className="w-4 h-4 text-rose-400" />
                 <span>Vulnerable State</span>
               </button>
 
               <button
-                onClick={() => setIsPatchedMode(true)}
-                className={`py-2 px-3 rounded-md font-mono text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                onClick={() => {
+                  setIsPatchedMode(true);
+                  setResultStatus('IDLE');
+                }}
+                className={`py-2.5 px-3 rounded-md font-mono text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
                   isPatchedMode
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-glow-green'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 <span>Patched Defense</span>
               </button>
             </div>
@@ -317,7 +362,10 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
                 {currentPresets.map((preset, idx) => (
                   <button
                     key={idx}
-                    onClick={() => setCustomPayload(preset.value)}
+                    onClick={() => {
+                      setCustomPayload(preset.value);
+                      setResultStatus('IDLE');
+                    }}
                     className="text-[10px] font-mono px-2 py-1 rounded bg-soc-bg border border-soc-border text-slate-300 hover:text-cyan-300 hover:border-cyan-400 transition-colors"
                   >
                     {preset.label}
@@ -336,15 +384,20 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
               />
             </div>
 
+            {/* Execute Button */}
             <button
               onClick={handleRunSimulation}
               disabled={isRunning}
-              className="w-full mt-3 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-soc-bg font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-glow-cyan transition-all transform active:scale-98 disabled:opacity-50"
+              className={`w-full mt-3 py-3 rounded-lg font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all transform active:scale-98 shadow-lg ${
+                isRunning
+                  ? 'bg-cyan-600 text-white opacity-80 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-soc-bg shadow-glow-cyan'
+              }`}
             >
               {isRunning ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Executing Safe Sandbox Run...</span>
+                  <span>Executing Safe PoC ({progress}%)...</span>
                 </>
               ) : (
                 <>
@@ -378,14 +431,30 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
                   [+] DEFENSE VERIFIED
                 </span>
               )}
+              {isRunning && (
+                <span className="px-2.5 py-0.5 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 text-[10px] font-mono font-bold flex items-center gap-1">
+                  <Activity className="w-3 h-3 animate-spin" />
+                  PROBING...
+                </span>
+              )}
             </div>
+
+            {/* Progress Bar when running */}
+            {isRunning && (
+              <div className="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mb-3 border border-slate-700">
+                <div 
+                  className="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            )}
 
             {/* Terminal Output Stream */}
             <div className="flex-1 bg-black/90 p-4 rounded-lg font-mono text-xs overflow-y-auto space-y-1.5 border border-soc-border/60">
               {logs.map((log, idx) => {
                 const isFail = log.includes('[-]') || log.includes('[!]');
                 const isPass = log.includes('[+]');
-                const isWarn = log.includes('[*]');
+                const isWarn = log.includes('[*]') || log.includes('[>]');
 
                 return (
                   <div 
@@ -406,9 +475,11 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
               })}
               {isRunning && (
                 <div className="flex items-center gap-2 text-cyan-400 animate-pulse pt-2">
-                  <span>&gt; Processing request and applying defensive interceptors...</span>
+                  <Zap className="w-3.5 h-3.5 animate-bounce" />
+                  <span>&gt; Simulating safe protocol handshake with {selectedVuln.affectedComponent}...</span>
                 </div>
               )}
+              <div ref={terminalEndRef} />
             </div>
 
             {/* Bottom Status Card */}
