@@ -190,7 +190,7 @@ export const InteractiveCVSSCalculator: React.FC<CVSSProps> = ({
                 </button>
               </div>
 
-              <div className="p-3 bg-slate-900 text-emerald-400 font-mono text-xs rounded-xl border border-slate-800 break-all leading-relaxed">
+              <div className="p-3 bg-slate-50 text-blue-900 font-mono font-bold text-xs rounded-xl border border-slate-200 break-all leading-relaxed">
                 {result.vectorString}
               </div>
             </div>

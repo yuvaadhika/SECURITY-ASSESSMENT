@@ -37,11 +37,11 @@ export const AndroidPhoneFrame: React.FC<AndroidPhoneFrameProps> = ({
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-100/80 text-slate-900 flex flex-col font-sans selection:bg-blue-500/20 selection:text-blue-900">
-      {/* Top Desktop Control Bar (Only shown on desktop / tablet screens >= 768px) */}
+    <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900">
+      {/* Top Desktop Bar (Only on large screens) */}
       <div className="hidden md:flex items-center justify-between px-6 py-2.5 bg-white border-b border-slate-200 shadow-sm z-40 sticky top-0">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm">
+          <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm">
             <ShieldAlert className="w-4 h-4" />
           </div>
           <div>
@@ -57,7 +57,7 @@ export const AndroidPhoneFrame: React.FC<AndroidPhoneFrameProps> = ({
           </div>
         </div>
 
-        {/* Viewport Mode Switcher & Actions */}
+        {/* Viewport Switcher */}
         <div className="flex items-center gap-3">
           <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
             <button
@@ -96,22 +96,22 @@ export const AndroidPhoneFrame: React.FC<AndroidPhoneFrameProps> = ({
         </div>
       </div>
 
-      {/* Main Container Area */}
+      {/* Main Screen Area */}
       {viewMode === 'phone' ? (
-        <div className="flex-1 flex items-center justify-center p-0 md:p-6 lg:p-8">
-          {/* Android Mobile Phone Shell */}
-          <div className="w-full md:max-w-[430px] md:h-[915px] md:rounded-[48px] bg-slate-900 md:shadow-2xl md:ring-12 md:ring-slate-800 md:ring-offset-4 md:ring-offset-slate-200/60 overflow-hidden flex flex-col relative transition-all duration-300">
+        <div className="flex-1 flex items-center justify-center p-0 md:p-6 lg:p-8 bg-slate-100">
+          {/* Mild Titanium/Silver Android Phone Shell */}
+          <div className="w-full md:max-w-[430px] md:h-[915px] md:rounded-[48px] bg-white border border-slate-200 md:shadow-2xl md:ring-8 md:ring-slate-300 md:ring-offset-4 md:ring-offset-slate-100 overflow-hidden flex flex-col relative transition-all duration-300">
             
             {/* Top Android Status Bar */}
-            <div className="bg-white border-b border-slate-100 px-6 pt-3 pb-2 flex items-center justify-between text-xs text-slate-800 font-semibold select-none z-30 flex-shrink-0">
+            <div className="bg-white border-b border-slate-200 px-6 pt-3 pb-2 flex items-center justify-between text-xs text-slate-800 font-semibold select-none z-30 flex-shrink-0">
               {/* Clock */}
               <div className="text-[13px] font-medium tracking-tight text-slate-900">
                 {currentTime}
               </div>
 
               {/* Android Punch Hole Camera */}
-              <div className="w-4 h-4 rounded-full bg-slate-900 flex items-center justify-center shadow-inner">
-                <div className="w-1.5 h-1.5 rounded-full bg-slate-950 ring-1 ring-slate-800" />
+              <div className="w-4 h-4 rounded-full bg-slate-800 flex items-center justify-center shadow-inner">
+                <div className="w-1.5 h-1.5 rounded-full bg-slate-900 ring-1 ring-slate-700" />
               </div>
 
               {/* Status Icons: 5G, Wi-Fi, Battery */}
@@ -127,7 +127,7 @@ export const AndroidPhoneFrame: React.FC<AndroidPhoneFrameProps> = ({
               </div>
             </div>
 
-            {/* Android Screen Scrollable Body */}
+            {/* Android Screen Scrollable Body (Mild Slate-50) */}
             <div className="flex-1 overflow-y-auto bg-slate-50 relative flex flex-col">
               {children}
             </div>

@@ -44,17 +44,17 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Top Android App Header */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-soft-sm">
         {/* Top Micro Banner */}
-        <div className="bg-slate-900 text-white px-3.5 py-1.5 flex items-center justify-between text-[11px] font-mono">
+        <div className="bg-slate-100 border-b border-slate-200 text-slate-700 px-3.5 py-1.5 flex items-center justify-between text-[11px] font-mono">
           <div className="flex items-center gap-2">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            <span className="font-bold text-emerald-400">NTRO</span>
-            <span className="text-slate-400">| PS-26163</span>
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
+            <span className="font-bold text-slate-900">NTRO</span>
+            <span className="text-slate-500">| PS-26163</span>
           </div>
 
-          <div className="flex items-center gap-2 text-slate-300">
+          <div className="flex items-center gap-2 text-slate-600 font-semibold">
             <span>Score:</span>
             <span className={`font-bold ${
-              securityScore >= 80 ? 'text-emerald-400' : securityScore >= 60 ? 'text-amber-400' : 'text-rose-400'
+              securityScore >= 80 ? 'text-emerald-600' : securityScore >= 60 ? 'text-amber-600' : 'text-rose-600'
             }`}>
               {securityScore}/100
             </span>
