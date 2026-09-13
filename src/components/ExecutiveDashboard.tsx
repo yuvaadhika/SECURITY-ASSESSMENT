@@ -15,8 +15,10 @@ import {
   Activity,
   Terminal,
   Lock,
-  Radio,
-  FileText
+  Radio, 
+  FileText,
+  Network,
+  Sparkles
 } from 'lucide-react';
 import { Vulnerability, ScopeArea } from '../types/security';
 
@@ -112,6 +114,36 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Innovation Feature Callout Banner */}
+      <div className="bg-gradient-to-r from-indigo-50/80 via-blue-50/60 to-slate-50 rounded-2xl p-4 sm:p-5 border border-indigo-200/80 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-start gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+            <Network className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-indigo-950">
+                Multi-Hop Attack Graph & AI Threat Defense Lab
+              </span>
+              <span className="bg-indigo-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full uppercase tracking-wider">
+                Innovation
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 mt-0.5 max-w-xl leading-relaxed">
+              Simulate 5-stage attack kill-chains, real-time blast radius calculations, test WebMCP prompt injection guards, and generate 1-click virtual WAF patches.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setActiveTab('graph')}
+          className="w-full sm:w-auto flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-medium text-xs px-4 py-2 rounded-xl shadow-xs transition-all flex-shrink-0"
+        >
+          <span>Open Attack Graph</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
       </div>
 
       {/* Key Metric Highlights Grid */}

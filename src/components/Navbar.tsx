@@ -8,7 +8,8 @@ import {
   FlaskConical, 
   Cpu, 
   ShieldCheck, 
-  LayoutDashboard
+  LayoutDashboard,
+  Network
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -29,12 +30,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   totalCount
 }) => {
   const navItems = [
-    { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
-    { id: 'vault', label: 'Vault', icon: ShieldAlert, badge: `${totalCount}` },
-    { id: 'sandbox', label: 'PoC Lab', icon: FlaskConical },
-    { id: 'cvss', label: 'CVSS', icon: Calculator },
-    { id: 'sast', label: 'SAST', icon: Code2 },
-    { id: 'toolchain', label: 'Tools', icon: Cpu },
+    { id: 'dashboard', label: 'Home', shortLabel: 'Home', icon: LayoutDashboard },
+    { id: 'vault', label: 'Vault', shortLabel: 'Vault', icon: ShieldAlert, badge: `${totalCount}` },
+    { id: 'graph', label: 'Attack Graph', shortLabel: 'Graph', icon: Network, badge: 'NEW' },
+    { id: 'sandbox', label: 'PoC Lab', shortLabel: 'PoC', icon: FlaskConical },
+    { id: 'cvss', label: 'CVSS', shortLabel: 'CVSS', icon: Calculator },
+    { id: 'sast', label: 'SAST', shortLabel: 'SAST', icon: Code2 },
+    { id: 'toolchain', label: 'Tools', shortLabel: 'Tools', icon: Cpu },
   ];
 
   return (
@@ -118,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Android Mobile Bottom Navigation Bar (Ultra-Clean Spacing) */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg">
-        <div className="max-w-[440px] md:max-w-lg mx-auto grid grid-cols-6 py-1.5 px-1">
+        <div className="max-w-[440px] md:max-w-lg mx-auto grid grid-cols-7 py-1.5 px-0.5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -137,13 +139,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}>
                   <Icon className="w-4 h-4" />
                   {item.badge && (
-                    <span className="absolute -top-1 -right-1.5 bg-rose-500 text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center">
+                    <span className={`absolute -top-1 -right-1.5 text-white text-[7px] font-bold rounded-full px-1 flex items-center justify-center ${
+                      item.badge === 'NEW' ? 'bg-indigo-600' : 'bg-rose-500'
+                    }`}>
                       {item.badge}
                     </span>
                   )}
                 </div>
-                <span className="text-[10px] mt-0.5 tracking-tight font-medium">
-                  {item.label}
+                <span className="text-[9px] mt-0.5 tracking-tight font-medium truncate max-w-[46px]">
+                  {item.shortLabel}
                 </span>
                 {isActive && (
                   <span className="w-2.5 h-0.5 bg-blue-600 rounded-full mt-0.5" />

@@ -3,6 +3,7 @@ import { AndroidPhoneFrame } from './components/AndroidPhoneFrame';
 import { Navbar } from './components/Navbar';
 import { ExecutiveDashboard } from './components/ExecutiveDashboard';
 import { VulnerabilityVault } from './components/VulnerabilityVault';
+import { AttackGraphStudio } from './components/AttackGraphStudio';
 import { SafePoCSandbox } from './components/SafePoCSandbox';
 import { InteractiveCVSSCalculator } from './components/InteractiveCVSSCalculator';
 import { SASTSemgrepStudio } from './components/SASTSemgrepStudio';
@@ -85,6 +86,10 @@ export function App() {
               onOpenSandbox={handleOpenSandbox}
               onOpenCvss={handleOpenCvss}
             />
+          )}
+
+          {activeTab === 'graph' && (
+            <AttackGraphStudio />
           )}
 
           {activeTab === 'sandbox' && (
