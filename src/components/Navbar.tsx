@@ -41,26 +41,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      {/* Top Android App Header */}
+      {/* Clean Top App Header (No PS Number Banner) */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-soft-sm">
-        {/* Top Micro Banner */}
-        <div className="bg-slate-100 border-b border-slate-200 text-slate-700 px-3.5 py-1.5 flex items-center justify-between text-[11px] font-mono">
-          <div className="flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="font-bold text-slate-900">NTRO</span>
-            <span className="text-slate-500">| PS-26163</span>
-          </div>
-
-          <div className="flex items-center gap-2 text-slate-600 font-semibold">
-            <span>Score:</span>
-            <span className={`font-bold ${
-              securityScore >= 80 ? 'text-emerald-600' : securityScore >= 60 ? 'text-amber-600' : 'text-rose-600'
-            }`}>
-              {securityScore}/100
-            </span>
-          </div>
-        </div>
-
         {/* Main Header Action Area */}
         <div className="px-4 py-2.5 flex items-center justify-between gap-2">
           {/* Logo & Brand */}
@@ -81,19 +63,30 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               </div>
               <p className="text-[10px] text-slate-500 font-medium">
-                Security Assessment
+                Security Assessment Suite
               </p>
             </div>
           </div>
 
-          {/* Quick Action Button: Official Report */}
-          <button
-            onClick={onOpenReport}
-            className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-medium text-xs px-3 py-1.5 rounded-lg shadow-sm transition-all"
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Report</span>
-          </button>
+          {/* Header Score & Action Button */}
+          <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-xs">
+              <span className="text-slate-500 font-medium text-[11px]">Score:</span>
+              <span className={`font-bold font-mono ${
+                securityScore >= 80 ? 'text-emerald-600' : securityScore >= 60 ? 'text-amber-600' : 'text-rose-600'
+              }`}>
+                {securityScore}/100
+              </span>
+            </div>
+
+            <button
+              onClick={onOpenReport}
+              className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-medium text-xs px-3 py-1.5 rounded-lg shadow-sm transition-all"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Report</span>
+            </button>
+          </div>
         </div>
 
         {/* Desktop / Tablet Horizontal Navigation (when viewed in Full Screen mode) */}
@@ -126,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </nav>
       </header>
 
-      {/* Android Mobile Bottom Navigation Bar (Standard Mobile Experience) */}
+      {/* Android Mobile Bottom Navigation Bar */}
       <div className="sticky bottom-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] px-2 py-1.5">
         <div className="grid grid-cols-6 gap-1 max-w-lg mx-auto">
           {navItems.map((item) => {
