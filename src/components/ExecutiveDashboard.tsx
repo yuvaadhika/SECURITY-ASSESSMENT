@@ -59,7 +59,7 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
               <Activity className="w-3.5 h-3.5 text-blue-600" />
-              <span>NTRO PS-26163 · WHITE-BOX AUDIT</span>
+              <span>SECURITY AUDIT · WHITE-BOX ASSESSMENT</span>
             </div>
             
             <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-slate-900 tracking-tight leading-tight">
