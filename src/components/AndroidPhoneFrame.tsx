@@ -52,7 +52,7 @@ export const AndroidPhoneFrame: React.FC<AndroidPhoneFrameProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-slate-500">
-              Target: World Monitor (koala73/worldmonitor)
+              National Technical Research Organisation · Official Security Audit
             </p>
           </div>
         </div>
@@ -83,16 +83,6 @@ export const AndroidPhoneFrame: React.FC<AndroidPhoneFrameProps> = ({
               <span>💻 Full Screen View</span>
             </button>
           </div>
-
-          <a
-            href="https://github.com/koala73/worldmonitor"
-            target="_blank"
-            rel="noreferrer"
-            className="text-xs text-slate-600 hover:text-blue-600 flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-white"
-          >
-            <span>Target Repo</span>
-            <ExternalLink className="w-3 h-3" />
-          </a>
         </div>
       </div>
 

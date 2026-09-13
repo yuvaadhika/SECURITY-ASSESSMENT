@@ -44,17 +44,6 @@ export const Footer: React.FC = () => {
               <ExternalLink className="w-3.5 h-3.5" />
               <span>Vercel Deploy</span>
             </a>
-
-            <span>•</span>
-
-            <a
-              href="https://github.com/koala73/worldmonitor"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-blue-700 flex items-center gap-1 transition-colors font-medium"
-            >
-              <span>Target: koala73/worldmonitor</span>
-            </a>
           </div>
         </div>
 

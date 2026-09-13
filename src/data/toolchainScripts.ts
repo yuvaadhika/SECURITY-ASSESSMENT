@@ -8,7 +8,7 @@ export const PYTHON_AUDIT_SCRIPTS = [
 National Technical Research Organisation (NTRO) - Problem Statement 26163
 Automated Security Assessment Script for World Monitor Application
 Author: NTRO Assessment Team (Yuvaadhika)
-Target: https://www.worldmonitor.app / https://github.com/koala73/worldmonitor
+Target: World Monitor Application
 """
 
 import requests

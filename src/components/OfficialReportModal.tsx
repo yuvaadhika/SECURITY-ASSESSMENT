@@ -44,7 +44,7 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
         assessmentDate: "September 2026",
         assessmentType: "White-Box Source Code & API Security Audit",
         analyst: "Yuvaadhika (Authorized Security Assessment Team)",
-        target: "World Monitor (https://www.worldmonitor.app / https://github.com/koala73/worldmonitor)"
+        target: "World Monitor Application (White-Box Security Assessment)"
       },
       posture: {
         initialScore: 62,
