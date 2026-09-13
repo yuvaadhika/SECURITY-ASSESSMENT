@@ -10,7 +10,8 @@ import {
   Wand2, 
   Download,
   Terminal,
-  ShieldAlert
+  ShieldAlert,
+  RotateCcw
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { SEMGREP_RULES, SAMPLE_CODE_SNIPPETS } from '../data/semgrepRules';
@@ -19,13 +20,109 @@ interface SASTProps {
   onMitigate: (vulnId: string) => void;
 }
 
+const SNIPPET_FIXES: Record<string, { fixedCode: string; vulnId: string }> = {
+  'snippet-feed-proxy': {
+    vulnId: 'WM-2026-001',
+    fixedCode: `import { NextApiRequest, NextApiResponse } from 'next';
+import dns from 'dns/promises';
+
+const ALLOWED_DOMAINS = new Set([
+  'acleddata.com',
+  'api.aisstream.io',
+  'opensky-network.org',
+  'earthquake.usgs.gov'
+]);
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { target } = req.query;
+  if (!target || typeof target !== 'string') {
+    return res.status(400).json({ error: 'Missing target URL' });
+  }
+
+  try {
+    const parsedUrl = new URL(target);
+    if (!ALLOWED_DOMAINS.has(parsedUrl.hostname)) {
+      return res.status(403).json({ error: 'Target domain not authorized' });
+    }
+
+    // Resolve DNS & verify non-private unicast IP
+    const addresses = await dns.resolve4(parsedUrl.hostname);
+    for (const ip of addresses) {
+      if (ip.startsWith('127.') || ip.startsWith('10.') || ip.startsWith('169.254.') || ip.startsWith('192.168.')) {
+        return res.status(403).json({ error: 'Restricted network target' });
+      }
+    }
+
+    const upstreamResponse = await fetch(target, { signal: AbortSignal.timeout(5000) });
+    const data = await upstreamResponse.text();
+    return res.status(200).send(data);
+  } catch (error) {
+    return res.status(500).json({ error: 'Proxy fetch failed' });
+  }
+}`
+  },
+  'snippet-news-feed': {
+    vulnId: 'WM-2026-002',
+    fixedCode: `import React from 'react';
+import DOMPurify from 'dompurify';
+
+export const NewsCard = ({ item }: { item: { title: string; summary: string } }) => {
+  const cleanTitle = DOMPurify.sanitize(item.title);
+  const cleanSummary = DOMPurify.sanitize(item.summary);
+
+  return (
+    <div className="news-card">
+      <h3 dangerouslySetInnerHTML={{ __html: cleanTitle }} />
+      <p dangerouslySetInnerHTML={{ __html: cleanSummary }} />
+    </div>
+  );
+};`
+  },
+  'snippet-scenario-api': {
+    vulnId: 'WM-2026-003',
+    fixedCode: `import { db } from '@/lib/db';
+
+export default async function handler(req: any, res: any) {
+  const { id: workspaceId } = req.query;
+  const user = req.user; // Authenticated from JWT
+
+  if (req.method === 'GET') {
+    // Tenant ownership & membership verification
+    const isMember = await db.workspaceMembers.findFirst({
+      where: { workspaceId: String(workspaceId), userId: user.id }
+    });
+
+    if (!isMember) {
+      return res.status(403).json({ error: 'Forbidden: Unauthorized workspace access' });
+    }
+
+    const scenarios = await db.scenarios.findMany({
+      where: { workspaceId: String(workspaceId) }
+    });
+    return res.status(200).json(scenarios);
+  }
+}`
+  },
+  'snippet-provider-config': {
+    vulnId: 'WM-2026-006',
+    fixedCode: `export const INTELLIGENCE_PROVIDERS = {
+  aisStream: {
+    apiKey: process.env.AIS_STREAM_API_KEY || "",
+    ws: "wss://stream.aisstream.io/v0/stream"
+  },
+  finnhub: {
+    apiKey: process.env.FINNHUB_API_KEY || "",
+    url: "https://finnhub.io/api/v1"
+  }
+};`
+  }
+};
+
 export const SASTSemgrepStudio: React.FC<SASTProps> = ({ onMitigate }) => {
   const [selectedSnippetId, setSelectedSnippetId] = useState<string>('snippet-feed-proxy');
   const [codeContent, setCodeContent] = useState<string>(SAMPLE_CODE_SNIPPETS[0].code);
-  const [selectedRuleId, setSelectedRuleId] = useState<string>('all');
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const [scanResults, setScanResults] = useState<any[] | null>(null);
-  const [copiedYaml, setCopiedYaml] = useState<boolean>(false);
 
   const selectedSnippet = SAMPLE_CODE_SNIPPETS.find(s => s.id === selectedSnippetId) || SAMPLE_CODE_SNIPPETS[0];
 
@@ -102,125 +199,68 @@ export const SASTSemgrepStudio: React.FC<SASTProps> = ({ onMitigate }) => {
 
       setScanResults(findings);
       setIsScanning(false);
-    }, 900);
+    }, 600);
   };
 
-  const handleApplyAutoFix = (finding: any) => {
-    if (finding.vulnId === 'WM-2026-001') {
-      setCodeContent(`import type { NextApiRequest, NextApiResponse } from 'next';
-import dns from 'dns/promises';
-
-const ALLOWED_DOMAINS = new Set(['acleddata.com', 'api.aisstream.io', 'earthquake.usgs.gov']);
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { target } = req.query;
-  if (!target || typeof target !== 'string') return res.status(400).json({ error: 'Target URL is required' });
-
-  try {
-    const parsed = new URL(target);
-    if (!ALLOWED_DOMAINS.has(parsed.hostname)) {
-      return res.status(403).json({ error: 'Domain unauthorized by NTRO Security Policy' });
+  const handleApplyFix = (snippetId: string) => {
+    const fix = SNIPPET_FIXES[snippetId];
+    if (fix) {
+      setCodeContent(fix.fixedCode);
+      setScanResults(null);
+      onMitigate(fix.vulnId);
+      try {
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+      } catch (e) {}
     }
-    const response = await fetch(parsed.toString(), { redirect: 'error' });
-    const data = await response.text();
-    return res.status(200).send(data);
-  } catch (err) {
-    return res.status(500).json({ error: 'Secure proxy fetch failed' });
-  }
-}`);
-    } else if (finding.vulnId === 'WM-2026-002') {
-      setCodeContent(`import React from 'react';
-import DOMPurify from 'dompurify';
-
-export const NewsCard = ({ item }: { item: { title: string; summary: string } }) => {
-  const cleanTitle = DOMPurify.sanitize(item.title, { ALLOWED_TAGS: ['b', 'i', 'em', 'span'] });
-  const cleanSummary = DOMPurify.sanitize(item.summary, { ALLOWED_TAGS: ['b', 'i', 'em', 'span'] });
-
-  return (
-    <div className="news-card">
-      <h3 dangerouslySetInnerHTML={{ __html: cleanTitle }} />
-      <p dangerouslySetInnerHTML={{ __html: cleanSummary }} />
-    </div>
-  );
-};`);
-    } else if (finding.vulnId === 'WM-2026-003') {
-      setCodeContent(`import { db } from '@/lib/db';
-
-export default async function handler(req: any, res: any) {
-  const { id: workspaceId } = req.query;
-  const user = req.user;
-
-  if (!user?.id) return res.status(401).json({ error: 'Auth required' });
-
-  // 1. Verify tenant membership
-  const member = await db.workspaceMembers.findFirst({
-    where: { workspaceId: String(workspaceId), userId: user.id }
-  });
-  if (!member) return res.status(403).json({ error: 'Access Denied: Tenant Isolation Enforced' });
-
-  if (req.method === 'GET') {
-    const scenarios = await db.scenarios.findMany({ where: { workspaceId: String(workspaceId) } });
-    return res.status(200).json(scenarios);
-  }
-}`);
-    } else {
-      setCodeContent(`// Fixed: Secrets loaded from process.env on backend
-export const INTELLIGENCE_PROVIDERS = {
-  aisStream: { endpoint: '/api/intel/ais' },
-  finnhub: { endpoint: '/api/intel/finnhub' }
-};`);
-    }
-
-    onMitigate(finding.vulnId);
-    setScanResults([]);
-    confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
-  };
-
-  const handleCopyYamlBundle = () => {
-    const fullYaml = SEMGREP_RULES.map(r => r.yamlCode).join('\n---\n');
-    navigator.clipboard.writeText(fullYaml);
-    setCopiedYaml(true);
-    setTimeout(() => setCopiedYaml(false), 2000);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="cyber-panel rounded-xl p-5 border border-soc-border">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-display font-bold text-white flex items-center gap-2">
-              <Code2 className="w-5 h-5 text-purple-400" />
-              Semgrep SAST Rule Engine & Static Code Studio
+            <h2 className="text-base sm:text-lg font-display font-bold text-slate-900 flex items-center gap-2">
+              <Code2 className="w-5 h-5 text-violet-600" />
+              Semgrep SAST Static Analysis Studio
             </h2>
-            <p className="text-xs font-mono text-slate-400 mt-1">
-              Audit World Monitor source code against custom Semgrep rules to detect SSRF, DOM XSS, BOLA, and credentials.
+            <p className="text-xs text-slate-500 mt-0.5">
+              Custom static application security testing rules written for NTRO CI/CD pipeline automation.
             </p>
           </div>
 
-          <button
-            onClick={handleCopyYamlBundle}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-soc-bg border border-soc-border text-slate-300 hover:text-white font-mono text-xs transition-colors"
-          >
-            {copiedYaml ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-            <span>Export All Semgrep YAMLs</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleRunScan}
+              disabled={isScanning}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-700 active:bg-violet-800 disabled:opacity-50 text-white font-semibold text-xs shadow-sm transition-all"
+            >
+              {isScanning ? (
+                <>
+                  <RotateCcw className="w-3.5 h-3.5 animate-spin" />
+                  <span>Analyzing AST...</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-3.5 h-3.5" />
+                  <span>Run Semgrep Rules</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Snippet Selector Tabs */}
-        <div className="mt-4 pt-4 border-t border-soc-border flex flex-wrap items-center gap-2">
-          <span className="text-xs font-mono text-slate-400 flex items-center gap-1 mr-2">
-            <FileCode className="w-3.5 h-3.5 text-cyan-400" />
-            Select Codebase Module:
-          </span>
+        {/* Snippet Switcher */}
+        <div className="mt-4 pt-3.5 border-t border-slate-100 flex flex-wrap gap-1.5">
+          <span className="text-xs font-semibold text-slate-700 self-center mr-1">Target Code:</span>
           {SAMPLE_CODE_SNIPPETS.map((snippet) => (
             <button
               key={snippet.id}
               onClick={() => handleSnippetChange(snippet.id)}
-              className={`text-xs font-mono px-3 py-1.5 rounded-lg border transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
                 selectedSnippetId === snippet.id
-                  ? 'bg-purple-500/20 text-purple-300 border-purple-400 font-bold'
-                  : 'bg-soc-bg border-soc-border text-slate-400 hover:text-slate-200'
+                  ? 'bg-violet-50 text-violet-700 border border-violet-300 font-semibold shadow-2xs'
+                  : 'bg-slate-50 border border-slate-200 text-slate-700 hover:bg-white'
               }`}
             >
               {snippet.title}
@@ -229,115 +269,106 @@ export const INTELLIGENCE_PROVIDERS = {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Interactive Code Editor */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="cyber-panel rounded-xl p-5 border border-soc-border space-y-3">
+      {/* Main Studio Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        {/* Code Editor & Test Harness */}
+        <div className="lg:col-span-7 space-y-3">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-                <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
-                <span className="font-mono text-xs text-slate-400 ml-2">
-                  {selectedSnippet.title}
-                </span>
-              </div>
+              <span className="font-mono text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <FileCode className="w-4 h-4 text-violet-600" />
+                {selectedSnippet.title}
+              </span>
 
               <button
-                onClick={handleRunScan}
-                disabled={isScanning}
-                className="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-400 hover:to-indigo-500 text-white font-mono text-xs font-bold uppercase transition-all shadow-glow-cyan disabled:opacity-50"
+                onClick={() => handleApplyFix(selectedSnippetId)}
+                className="flex items-center gap-1 text-xs font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-lg transition-colors"
               >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>{isScanning ? 'Analyzing AST...' : 'Run Semgrep Audit'}</span>
+                <Wand2 className="w-3.5 h-3.5" />
+                <span>Apply Patch</span>
               </button>
             </div>
 
             <textarea
               value={codeContent}
-              onChange={(e) => {
-                setCodeContent(e.target.value);
-                setScanResults(null);
-              }}
-              rows={16}
-              className="w-full bg-black/90 text-emerald-400 font-mono text-xs p-4 rounded-lg border border-soc-border focus:outline-none focus:border-purple-400 leading-relaxed resize-none"
-              spellCheck={false}
+              onChange={(e) => setCodeContent(e.target.value)}
+              rows={14}
+              className="w-full font-mono text-xs p-3.5 bg-slate-900 text-slate-100 rounded-xl border border-slate-800 focus:outline-none leading-relaxed resize-none"
             />
           </div>
         </div>
 
-        {/* Right Column: SAST Findings & Auto-Fix */}
+        {/* Semgrep Rule Viewer & Scan Results */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="cyber-panel rounded-xl p-5 border border-soc-border flex flex-col h-[460px]">
-            <div className="flex items-center justify-between pb-3 border-b border-soc-border mb-3">
-              <h3 className="font-mono text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-purple-400" />
-                Semgrep SAST Finding Console
-              </h3>
-              {scanResults !== null && (
-                <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold ${
-                  scanResults.length > 0 
-                    ? 'bg-red-500/20 text-red-400 border border-red-500/40' 
-                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+          {/* Scan Findings Panel */}
+          {scanResults !== null && (
+            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-3">
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center justify-between">
+                <span>AST Scan Results</span>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
+                  scanResults.length === 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
                 }`}>
-                  {scanResults.length} Finding{scanResults.length !== 1 ? 's' : ''}
+                  {scanResults.length === 0 ? '0 FINDINGS (CLEAN)' : `${scanResults.length} VULNERABILITY DETECTED`}
                 </span>
-              )}
-            </div>
+              </h3>
 
-            <div className="flex-1 overflow-y-auto space-y-3">
-              {scanResults === null && (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500 font-mono text-xs">
-                  <Code2 className="w-8 h-8 mb-2 opacity-50 text-purple-400" />
-                  <p>Click "Run Semgrep Audit" to scan this source file against custom NTRO defensive rules.</p>
+              {scanResults.length === 0 ? (
+                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs space-y-1">
+                  <div className="flex items-center gap-1.5 font-semibold">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <span>No AST policy violations detected!</span>
+                  </div>
+                  <p className="text-[11px] text-emerald-700 leading-relaxed">
+                    Source code adheres to NTRO secure coding standard.
+                  </p>
                 </div>
-              )}
-
-              {scanResults && scanResults.length === 0 && (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6 text-emerald-400 font-mono text-xs space-y-2">
-                  <CheckCircle2 className="w-10 h-10" />
-                  <h4 className="font-bold text-sm text-white">Clean Code AST</h4>
-                  <p className="text-slate-400">Zero security policy violations found. Code adheres to NTRO defensive standards.</p>
-                </div>
-              )}
-
-              {scanResults && scanResults.map((finding, idx) => (
-                <div 
-                  key={idx}
-                  className="bg-soc-bg border border-red-500/40 rounded-xl p-4 space-y-3 animate-fadeIn"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/40">
-                          RULE: {finding.ruleId}
-                        </span>
-                        <span className="font-mono text-[10px] text-slate-400">
-                          Line ~{finding.line}
+              ) : (
+                <div className="space-y-2">
+                  {scanResults.map((finding, idx) => (
+                    <div key={idx} className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="font-semibold text-xs text-rose-900">
+                          {finding.title}
+                        </div>
+                        <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-rose-200 text-rose-900">
+                          Line {finding.line}
                         </span>
                       </div>
-                      <h4 className="font-bold text-xs text-white mt-1">
-                        {finding.title}
-                      </h4>
+
+                      <p className="text-xs text-rose-800 leading-relaxed">
+                        {finding.message}
+                      </p>
+
+                      <div className="pt-1">
+                        <button
+                          onClick={() => handleApplyFix(selectedSnippetId)}
+                          className="w-full flex items-center justify-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs py-1.5 rounded-lg shadow-2xs transition-all"
+                        >
+                          <Wand2 className="w-3.5 h-3.5" />
+                          <span>Auto-Apply Secure Patch</span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-
-                  <p className="text-xs text-slate-300 leading-relaxed font-mono">
-                    {finding.message}
-                  </p>
-
-                  <div className="pt-2 border-t border-soc-border flex items-center justify-between">
-                    <button
-                      onClick={() => handleApplyAutoFix(finding)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-500/30 font-mono text-xs font-bold transition-all shadow-glow-green"
-                    >
-                      <Wand2 className="w-3.5 h-3.5" />
-                      <span>Apply Hardened Auto-Fix</span>
-                    </button>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
+          )}
+
+          {/* Active Semgrep Rule Definition */}
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-xs text-slate-900 uppercase tracking-wider">
+                Semgrep Rule YAML
+              </span>
+              <span className="font-mono text-[10px] text-slate-500">
+                {SEMGREP_RULES[0].id}
+              </span>
+            </div>
+
+            <pre className="p-3.5 rounded-xl bg-slate-900 text-violet-300 font-mono text-xs overflow-x-auto leading-relaxed border border-slate-800 max-h-[260px]">
+              {SEMGREP_RULES[0].yamlCode}
+            </pre>
           </div>
         </div>
       </div>

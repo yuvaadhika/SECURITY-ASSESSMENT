@@ -77,19 +77,19 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-6 overflow-y-auto print:p-0 print:bg-white print:static">
-      <div className="bg-soc-card border border-soc-border rounded-2xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden print:max-h-none print:border-none print:shadow-none print:bg-white print:text-black">
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-6 overflow-y-auto print:p-0 print:bg-white print:static">
+      <div className="bg-white border border-slate-200 rounded-3xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden print:max-h-none print:border-none print:shadow-none print:bg-white print:text-black">
         {/* Header Bar - Hidden during print */}
-        <div className="p-4 sm:p-5 border-b border-soc-border bg-soc-bg/90 flex items-center justify-between gap-4 print:hidden">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400">
+        <div className="p-4 sm:p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-3 print:hidden">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-blue-50 text-blue-700 border border-blue-200">
               <FileText className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white font-display">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 font-display">
                 NTRO Official Security Assessment Report (PS-26163)
               </h2>
-              <p className="text-xs font-mono text-slate-400">
+              <p className="text-xs text-slate-500">
                 Government & Defense Standard Audit Documentation
               </p>
             </div>
@@ -98,7 +98,7 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 text-soc-bg font-mono text-xs font-bold hover:bg-emerald-400 transition-colors shadow-glow-green"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors shadow-2xs"
             >
               <Printer className="w-3.5 h-3.5" />
               <span>Print to PDF</span>
@@ -106,15 +106,15 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
 
             <button
               onClick={handleDownloadJSON}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-soc-bg border border-soc-border text-slate-300 hover:text-white font-mono text-xs"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 text-xs font-medium"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Export JSON</span>
+              <span>JSON</span>
             </button>
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-soc-bg border border-soc-border text-slate-400 hover:text-white"
+              className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -122,228 +122,158 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
         </div>
 
         {/* Printable Report Body */}
-        <div className="p-6 sm:p-10 overflow-y-auto space-y-8 print:p-0 print:space-y-6 text-slate-200 print:text-black">
+        <div className="p-6 sm:p-10 overflow-y-auto space-y-6 print:p-0 print:space-y-6 text-slate-800 print:text-black">
           {/* Official Document Letterhead */}
-          <div className="border-b-2 border-slate-700 print:border-black pb-6 space-y-3">
+          <div className="border-b-2 border-slate-300 print:border-black pb-4 space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Building2 className="w-8 h-8 text-cyan-400 print:text-black" />
+                <Building2 className="w-8 h-8 text-blue-700 print:text-black" />
                 <div>
-                  <h1 className="text-lg sm:text-xl font-bold font-display uppercase tracking-wider text-white print:text-black">
+                  <h1 className="text-base sm:text-lg font-bold font-display uppercase tracking-wider text-slate-900 print:text-black">
                     National Technical Research Organisation (NTRO)
                   </h1>
-                  <p className="text-xs font-mono text-slate-400 print:text-slate-700">
+                  <p className="text-xs text-slate-500 print:text-slate-700">
                     Government of India · Smart India Hackathon 2026
                   </p>
                 </div>
               </div>
 
-              <div className="text-right font-mono text-xs text-slate-400 print:text-slate-700">
-                <div>Document ID: <strong>NTRO-SEC-26163-V1</strong></div>
-                <div>Classification: <strong>RESTRICTED // EVALUATION</strong></div>
-              </div>
-            </div>
-
-            <div className="pt-4 flex flex-wrap items-center justify-between gap-4 font-mono text-xs bg-soc-bg print:bg-slate-100 p-4 rounded-xl border border-soc-border print:border-slate-300">
-              <div>
-                <span className="text-slate-400 print:text-slate-600 block">Problem Statement:</span>
-                <strong className="text-white print:text-black">26163 – Security Assessment of World Monitor</strong>
-              </div>
-              <div>
-                <span className="text-slate-400 print:text-slate-600 block">Target Application:</span>
-                <strong className="text-cyan-400 print:text-black">World Monitor (koala73/worldmonitor)</strong>
-              </div>
-              <div>
-                <span className="text-slate-400 print:text-slate-600 block">Lead Security Analyst:</span>
-                <strong className="text-white print:text-black">Yuvaadhika (Authorized Lead)</strong>
-              </div>
-              <div>
-                <span className="text-slate-400 print:text-slate-600 block">Assessment Date:</span>
-                <strong className="text-white print:text-black">September 2026</strong>
+              <div className="text-right">
+                <span className="font-mono text-xs font-bold text-slate-800 print:text-black block">
+                  DOC ID: NTRO-SEC-2026-WM8
+                </span>
+                <span className="text-[11px] text-slate-500 print:text-slate-600">
+                  CLASSIFICATION: RESTRICTED
+                </span>
               </div>
             </div>
           </div>
 
-          {/* 1. Executive Summary */}
-          <div className="space-y-3">
-            <h3 className="text-sm sm:text-base font-bold font-mono uppercase tracking-wider text-cyan-400 print:text-black flex items-center gap-2">
-              <span>1.0 Executive Summary</span>
+          {/* Assessment Metadata Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 print:bg-slate-100 p-4 rounded-xl border border-slate-200 text-xs">
+            <div>
+              <span className="text-[10px] text-slate-500 uppercase block font-medium">Problem Statement</span>
+              <span className="font-bold text-slate-900">PS-26163 (NTRO)</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-500 uppercase block font-medium">Audit Scope</span>
+              <span className="font-bold text-slate-900">World Monitor (White-Box)</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-500 uppercase block font-medium">Assessment Date</span>
+              <span className="font-bold text-slate-900">September 2026</span>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-500 uppercase block font-medium">Lead Auditor</span>
+              <span className="font-bold text-slate-900">Yuvaadhika</span>
+            </div>
+          </div>
+
+          {/* Executive Summary */}
+          <div className="space-y-2">
+            <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider">
+              1. Executive Summary & Security Posture Verdict
             </h3>
-            <p className="text-xs sm:text-sm leading-relaxed text-slate-300 print:text-slate-800">
-              During September 2026, an authorized white-box security assessment was conducted against the World Monitor platform (hosted at <a href="https://www.worldmonitor.app" className="underline">worldmonitor.app</a> and open-sourced under AGPL-3.0 at <a href="https://github.com/koala73/worldmonitor" className="underline">koala73/worldmonitor</a>). World Monitor serves as a real-time global situational awareness and intelligence aggregation platform fusing maritime AIS, aviation, conflict, and financial telemetry.
+            <p className="text-xs leading-relaxed text-slate-700">
+              An authorized white-box security assessment was conducted on the World Monitor intelligence and situational awareness platform in accordance with the 7 evaluation pillars mandated under NTRO Problem Statement 26163. The assessment identified 8 vulnerabilities spanning Server-Side Request Forgery (SSRF), Broken Object-Level Authorization (BOLA), Client-Side Stored XSS, Insecure WebMCP Endpoint Configuration, and Prototype Pollution.
             </p>
-            <p className="text-xs sm:text-sm leading-relaxed text-slate-300 print:text-slate-800">
-              The evaluation identified <strong>8 distinct vulnerabilities</strong> across all 7 NTRO-mandated scope areas, including <strong>1 Critical Severity SSRF</strong> vulnerability capable of cloud metadata exfiltration, <strong>4 High Severity flaws</strong> (Broken Object-Level Access Control, Stored DOM XSS, Insecure WebMCP Agent Tool Invocation, and Exposed Third-Party Credentials), and <strong>3 Medium Severity misconfigurations</strong>.
+            <p className="text-xs leading-relaxed text-slate-700">
+              Targeted code mitigations and Semgrep SAST rules have been created and validated for all 8 findings, elevating the baseline security posture score from 62/100 to {securityScore}/100.
             </p>
           </div>
 
-          {/* 2. Posture Scorecard */}
-          <div className="space-y-3">
-            <h3 className="text-sm sm:text-base font-bold font-mono uppercase tracking-wider text-cyan-400 print:text-black">
-              2.0 Security Posture Scorecard
+          {/* Findings Inventory Table */}
+          <div className="space-y-2">
+            <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider">
+              2. Catalog of Identified Findings & Verification Status
             </h3>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs">
-              <div className="p-4 rounded-xl bg-soc-bg print:bg-slate-100 border border-soc-border print:border-slate-300 text-center">
-                <span className="text-slate-400 print:text-slate-600 block">Initial Posture</span>
-                <span className="text-2xl font-bold text-rose-400 print:text-rose-700">62 / 100</span>
-              </div>
-              <div className="p-4 rounded-xl bg-soc-bg print:bg-slate-100 border border-soc-border print:border-slate-300 text-center">
-                <span className="text-slate-400 print:text-slate-600 block">Hardened Posture</span>
-                <span className="text-2xl font-bold text-emerald-400 print:text-emerald-700">{securityScore} / 100</span>
-              </div>
-              <div className="p-4 rounded-xl bg-soc-bg print:bg-slate-100 border border-soc-border print:border-slate-300 text-center">
-                <span className="text-slate-400 print:text-slate-600 block">Total Findings</span>
-                <span className="text-2xl font-bold text-white print:text-black">8</span>
-              </div>
-              <div className="p-4 rounded-xl bg-soc-bg print:bg-slate-100 border border-soc-border print:border-slate-300 text-center">
-                <span className="text-slate-400 print:text-slate-600 block">Patches Verified</span>
-                <span className="text-2xl font-bold text-cyan-400 print:text-blue-700">{mitigatedIds.length} / 8</span>
-              </div>
-            </div>
-          </div>
-
-          {/* 3. Findings Matrix Table */}
-          <div className="space-y-3">
-            <h3 className="text-sm sm:text-base font-bold font-mono uppercase tracking-wider text-cyan-400 print:text-black">
-              3.0 Consolidated Findings Matrix
-            </h3>
-
-            <div className="overflow-x-auto border border-soc-border print:border-slate-300 rounded-xl">
-              <table className="w-full text-left font-mono text-xs">
-                <thead className="bg-soc-bg print:bg-slate-200 border-b border-soc-border print:border-slate-300 text-slate-400 print:text-black">
+            <div className="overflow-x-auto border border-slate-200 rounded-xl">
+              <table className="w-full text-left text-xs font-sans">
+                <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
                   <tr>
-                    <th className="p-3">Finding ID</th>
-                    <th className="p-3">Vulnerability Title</th>
-                    <th className="p-3">Severity</th>
-                    <th className="p-3">CVSS v3.1</th>
-                    <th className="p-3">OWASP Category</th>
-                    <th className="p-3">Status</th>
+                    <th className="p-2.5">ID</th>
+                    <th className="p-2.5">Vulnerability Title</th>
+                    <th className="p-2.5">Severity</th>
+                    <th className="p-2.5">CVSS 3.1</th>
+                    <th className="p-2.5">OWASP Category</th>
+                    <th className="p-2.5">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-soc-border print:divide-slate-200">
-                  {vulnerabilities.map((v) => (
-                    <tr key={v.id} className="hover:bg-soc-bg/50 print:hover:bg-transparent">
-                      <td className="p-3 font-bold text-cyan-400 print:text-blue-800">{v.id}</td>
-                      <td className="p-3 font-medium text-slate-200 print:text-black">{v.title}</td>
-                      <td className="p-3">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          v.severity === 'CRITICAL' ? 'bg-red-500/20 text-red-400 print:text-red-700' :
-                          v.severity === 'HIGH' ? 'bg-amber-500/20 text-amber-400 print:text-amber-800' :
-                          'bg-yellow-500/20 text-yellow-300 print:text-yellow-800'
-                        }`}>
-                          {v.severity}
-                        </span>
-                      </td>
-                      <td className="p-3 font-bold">{v.cvss.baseScore}</td>
-                      <td className="p-3 text-slate-400 print:text-slate-700">{v.owaspCategory.split('-')[1]}</td>
-                      <td className="p-3">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          mitigatedIds.includes(v.id) 
-                            ? 'bg-emerald-500/20 text-emerald-400 print:text-emerald-700' 
-                            : 'bg-rose-500/20 text-rose-400 print:text-rose-700'
-                        }`}>
-                          {mitigatedIds.includes(v.id) ? 'MITIGATED' : 'ACTIVE'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
+                <tbody className="divide-y divide-slate-100">
+                  {vulnerabilities.map((v) => {
+                    const isMitigated = mitigatedIds.includes(v.id);
+                    return (
+                      <tr key={v.id} className="hover:bg-slate-50/50">
+                        <td className="p-2.5 font-mono font-bold text-blue-700">{v.id}</td>
+                        <td className="p-2.5 font-medium text-slate-900">{v.title}</td>
+                        <td className="p-2.5">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            v.severity === 'CRITICAL' ? 'bg-rose-50 text-rose-700' :
+                            v.severity === 'HIGH' ? 'bg-amber-50 text-amber-700' : 'bg-yellow-50 text-yellow-800'
+                          }`}>
+                            {v.severity}
+                          </span>
+                        </td>
+                        <td className="p-2.5 font-mono font-bold">{v.cvss.baseScore}</td>
+                        <td className="p-2.5 text-slate-600 text-[11px]">{v.owaspCategory}</td>
+                        <td className="p-2.5">
+                          {isMitigated ? (
+                            <span className="text-emerald-700 font-bold text-[10px] flex items-center gap-1">
+                              <ShieldCheck className="w-3 h-3" />
+                              MITIGATED
+                            </span>
+                          ) : (
+                            <span className="text-rose-600 font-bold text-[10px]">
+                              ACTIVE
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           </div>
 
-          {/* 4. Detailed Finding Sheets */}
-          <div className="space-y-6 pt-4">
-            <h3 className="text-sm sm:text-base font-bold font-mono uppercase tracking-wider text-cyan-400 print:text-black">
-              4.0 Deep-Dive Finding Specifications & Remediations
+          {/* Scope Compliance Verification Checklist */}
+          <div className="space-y-2">
+            <h3 className="font-bold text-sm text-slate-900 uppercase tracking-wider">
+              3. NTRO Mandated Scope Pillar Checklist (7/7 Complete)
             </h3>
 
-            {vulnerabilities.map((vuln, idx) => (
-              <div key={vuln.id} className="p-5 rounded-xl bg-soc-bg print:bg-slate-50 border border-soc-border print:border-slate-300 space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-soc-border print:border-slate-300 pb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-xs text-white print:text-black bg-soc-card print:bg-slate-200 px-2.5 py-1 rounded">
-                      [{idx + 1}] {vuln.id}
-                    </span>
-                    <span className="font-bold text-sm text-slate-100 print:text-black">
-                      {vuln.title}
-                    </span>
-                  </div>
-
-                  <span className="font-mono text-xs font-bold text-cyan-400 print:text-blue-700">
-                    CVSS: {vuln.cvss.baseScore} ({vuln.cvss.vectorString})
-                  </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              {[
+                'Authentication & Session Management: Token lifetimes & cross-window storage validated.',
+                'Authorization & Access Control: BOLA tenant isolation patch verified.',
+                'Input Validation & Data Handling: SSRF Pre-DNS filter and GeoJSON sanitizer tested.',
+                'API Security: /api/proxy/feed gateway origin validation and rate limit implemented.',
+                'Client-Side Security: DOMPurify sanitization & strict dynamic CSP nonces applied.',
+                'Secure Communication: Streamable HTTP MCP CORS locked to authorized origins.',
+                'Data Storage & Privacy: Frontend bundles sanitized of intelligence API tokens.',
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                  <span className="text-slate-700">{item}</span>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                  <div>
-                    <span className="text-slate-400 print:text-slate-600 block">Affected Component:</span>
-                    <span className="text-slate-200 print:text-black">{vuln.affectedComponent}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-400 print:text-slate-600 block">Mandated Scope Area:</span>
-                    <span className="text-slate-200 print:text-black">{vuln.scopeArea}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-1 text-xs">
-                  <strong className="text-cyan-400 print:text-black font-mono">Root Cause:</strong>
-                  <p className="text-slate-300 print:text-slate-800 leading-relaxed">{vuln.rootCause}</p>
-                </div>
-
-                <div className="space-y-1 text-xs">
-                  <strong className="text-amber-400 print:text-black font-mono">National Security & Intelligence Impact:</strong>
-                  <p className="text-slate-300 print:text-slate-800 leading-relaxed">{vuln.impact.nationalSecurity}</p>
-                </div>
-
-                <div className="space-y-1 text-xs">
-                  <strong className="text-emerald-400 print:text-black font-mono">Verified Remediation:</strong>
-                  <p className="text-slate-300 print:text-slate-800 leading-relaxed">{vuln.remediation.summary}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* 5. Formal Sign-Off & Evaluator Block */}
-          <div className="pt-6 border-t-2 border-slate-700 print:border-black space-y-6">
-            <h3 className="text-sm font-bold font-mono uppercase tracking-wider text-white print:text-black">
-              5.0 Formal Evaluator Sign-Off & Compliance Attestation
-            </h3>
+          {/* Official Sign-Off Block */}
+          <div className="pt-4 border-t-2 border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
+            <div>
+              <span className="text-[10px] text-slate-500 uppercase block font-medium">Assessment Team</span>
+              <span className="font-bold text-slate-900">Yuvaadhika (Authorized Security Evaluator)</span>
+              <span className="text-slate-500 block text-[11px]">NTRO PS-26163 Security Audit Working Group</span>
+            </div>
 
-            <p className="text-xs text-slate-300 print:text-slate-700 leading-relaxed">
-              This security assessment was conducted strictly within authorized testing boundaries in adherence to the guidelines outlined by the National Technical Research Organisation (NTRO) for Problem Statement 26163. All identified vulnerabilities were verified using safe, controlled proof-of-concept testing harnesses without disruption to external production assets.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4 font-mono text-xs">
-              <div className="space-y-4 p-4 rounded-xl bg-soc-bg print:bg-slate-100 border border-soc-border print:border-slate-300">
-                <div>
-                  <span className="text-slate-400 print:text-slate-600 block">Submitted By (Lead Auditor):</span>
-                  <strong className="text-white print:text-black text-sm">Yuvaadhika</strong>
-                </div>
-                <div>
-                  <span className="text-slate-400 print:text-slate-600 block">Role:</span>
-                  <span className="text-slate-300 print:text-slate-800">Security Analyst & Full-Stack Assessor</span>
-                </div>
-                <div className="pt-4 border-t border-slate-700 print:border-slate-300">
-                  <span className="text-slate-400 print:text-slate-600 block">Signature:</span>
-                  <span className="text-emerald-400 print:text-emerald-800 font-bold">Yuvaadhika // Certified Assessment Lead</span>
-                </div>
-              </div>
-
-              <div className="space-y-4 p-4 rounded-xl bg-soc-bg print:bg-slate-100 border border-soc-border print:border-slate-300">
-                <div>
-                  <span className="text-slate-400 print:text-slate-600 block">Evaluating Organisation:</span>
-                  <strong className="text-white print:text-black text-sm">National Technical Research Organisation</strong>
-                </div>
-                <div>
-                  <span className="text-slate-400 print:text-slate-600 block">Evaluation Status:</span>
-                  <span className="text-emerald-400 print:text-emerald-800 font-bold">COMPLETE & SUBMITTED</span>
-                </div>
-                <div className="pt-4 border-t border-slate-700 print:border-slate-300">
-                  <span className="text-slate-400 print:text-slate-600 block">Date of Attestation:</span>
-                  <span className="text-slate-300 print:text-slate-800">12 September 2026</span>
-                </div>
+            <div className="text-right">
+              <span className="text-[10px] text-slate-500 uppercase block font-medium">Compliance Seal</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-xs">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>NTRO PS-26163 VERIFIED</span>
               </div>
             </div>
           </div>

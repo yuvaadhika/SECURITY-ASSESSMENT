@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AndroidPhoneFrame } from './components/AndroidPhoneFrame';
 import { Navbar } from './components/Navbar';
 import { ExecutiveDashboard } from './components/ExecutiveDashboard';
 import { VulnerabilityVault } from './components/VulnerabilityVault';
@@ -17,6 +18,7 @@ export function App() {
   const [mitigatedIds, setMitigatedIds] = useState<string[]>(['WM-2026-005']); // 1 pre-mitigated as demo
   const [loadedCvssVuln, setLoadedCvssVuln] = useState<Vulnerability | null>(null);
   const [isReportOpen, setIsReportOpen] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<'phone' | 'desktop'>('phone');
 
   // Dynamic Posture Score Calculation: Base 62, increments as mitigations are tested/applied up to 98
   const baseScore = 62;
@@ -44,76 +46,85 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-soc-bg text-soc-text flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-300">
-      {/* Navigation Bar */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        securityScore={securityScore}
-        onOpenReport={() => setIsReportOpen(true)}
-        mitigatedCount={mitigatedIds.length}
-        totalCount={WORLD_MONITOR_VULNERABILITIES.length}
-      />
+    <AndroidPhoneFrame
+      viewMode={viewMode}
+      setViewMode={setViewMode}
+      onOpenReport={() => setIsReportOpen(true)}
+    >
+      <div className="flex-1 flex flex-col bg-slate-50 text-slate-900 font-sans">
+        {/* Navigation Bar */}
+        <Navbar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          securityScore={securityScore}
+          onOpenReport={() => setIsReportOpen(true)}
+          mitigatedCount={mitigatedIds.length}
+          totalCount={WORLD_MONITOR_VULNERABILITIES.length}
+        />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
-        {activeTab === 'dashboard' && (
-          <ExecutiveDashboard
-            vulnerabilities={WORLD_MONITOR_VULNERABILITIES}
-            securityScore={securityScore}
-            mitigatedIds={mitigatedIds}
-            setActiveTab={setActiveTab}
-            setSelectedVulnId={setSelectedVulnId}
-            onOpenReport={() => setIsReportOpen(true)}
-          />
-        )}
+        {/* Main Content Area */}
+        <main className="flex-1 w-full max-w-7xl mx-auto px-3.5 sm:px-6 py-4 sm:py-6">
+          {activeTab === 'dashboard' && (
+            <ExecutiveDashboard
+              vulnerabilities={WORLD_MONITOR_VULNERABILITIES}
+              securityScore={securityScore}
+              mitigatedIds={mitigatedIds}
+              setActiveTab={setActiveTab}
+              setSelectedVulnId={setSelectedVulnId}
+              onOpenReport={() => setIsReportOpen(true)}
+            />
+          )}
 
-        {activeTab === 'vault' && (
-          <VulnerabilityVault
-            vulnerabilities={WORLD_MONITOR_VULNERABILITIES}
-            selectedVulnId={selectedVulnId}
-            setSelectedVulnId={setSelectedVulnId}
-            mitigatedIds={mitigatedIds}
-            toggleMitigation={toggleMitigation}
-            onOpenSandbox={handleOpenSandbox}
-            onOpenCvss={handleOpenCvss}
-          />
-        )}
+          {activeTab === 'vault' && (
+            <VulnerabilityVault
+              vulnerabilities={WORLD_MONITOR_VULNERABILITIES}
+              selectedVulnId={selectedVulnId}
+              setSelectedVulnId={setSelectedVulnId}
+              mitigatedIds={mitigatedIds}
+              toggleMitigation={toggleMitigation}
+              onOpenSandbox={handleOpenSandbox}
+              onOpenCvss={handleOpenCvss}
+            />
+          )}
 
-        {activeTab === 'sandbox' && (
-          <SafePoCSandbox
-            vulnerabilities={WORLD_MONITOR_VULNERABILITIES}
-            initialVulnId={selectedVulnId}
-            onMitigate={(id) => {
-              if (!mitigatedIds.includes(id)) {
-                setMitigatedIds(prev => [...prev, id]);
-              }
-            }}
-            mitigatedIds={mitigatedIds}
-          />
-        )}
+          {activeTab === 'sandbox' && (
+            <SafePoCSandbox
+              vulnerabilities={WORLD_MONITOR_VULNERABILITIES}
+              initialVulnId={selectedVulnId}
+              onMitigate={(id) => {
+                if (!mitigatedIds.includes(id)) {
+                  setMitigatedIds(prev => [...prev, id]);
+                }
+              }}
+              mitigatedIds={mitigatedIds}
+            />
+          )}
 
-        {activeTab === 'cvss' && (
-          <InteractiveCVSSCalculator
-            vulnerabilities={WORLD_MONITOR_VULNERABILITIES}
-            loadedVuln={loadedCvssVuln}
-          />
-        )}
+          {activeTab === 'cvss' && (
+            <InteractiveCVSSCalculator
+              vulnerabilities={WORLD_MONITOR_VULNERABILITIES}
+              loadedVuln={loadedCvssVuln}
+            />
+          )}
 
-        {activeTab === 'sast' && (
-          <SASTSemgrepStudio
-            onMitigate={(id) => {
-              if (!mitigatedIds.includes(id)) {
-                setMitigatedIds(prev => [...prev, id]);
-              }
-            }}
-          />
-        )}
+          {activeTab === 'sast' && (
+            <SASTSemgrepStudio
+              onMitigate={(id) => {
+                if (!mitigatedIds.includes(id)) {
+                  setMitigatedIds(prev => [...prev, id]);
+                }
+              }}
+            />
+          )}
 
-        {activeTab === 'toolchain' && (
-          <ToolchainAutomation />
-        )}
-      </main>
+          {activeTab === 'toolchain' && (
+            <ToolchainAutomation />
+          )}
+        </main>
+
+        {/* Footer */}
+        <Footer />
+      </div>
 
       {/* Official NTRO Assessment Report Modal */}
       {isReportOpen && (
@@ -124,10 +135,7 @@ export function App() {
           onClose={() => setIsReportOpen(false)}
         />
       )}
-
-      {/* Footer */}
-      <Footer />
-    </div>
+    </AndroidPhoneFrame>
   );
 }
 

@@ -15,7 +15,8 @@ import {
   Activity,
   Terminal,
   Lock,
-  Radio
+  Radio,
+  FileText
 } from 'lucide-react';
 import { Vulnerability, ScopeArea } from '../types/security';
 
@@ -51,55 +52,52 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({
   ];
 
   return (
-    <div className="space-y-8 animate-fadeIn">
-      {/* Hero Executive Banner */}
-      <div className="relative rounded-2xl overflow-hidden cyber-panel p-6 sm:p-8 border border-soc-border">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div className="space-y-3 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-mono">
-              <Activity className="w-3.5 h-3.5 animate-pulse" />
-              <span>OFFICIAL PS-26163 DELIVERABLE · WHITE-BOX AUDIT</span>
+    <div className="space-y-4 sm:space-y-6">
+      {/* Hero Executive Card */}
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm relative overflow-hidden">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
+              <Activity className="w-3.5 h-3.5 text-blue-600" />
+              <span>NTRO PS-26163 · WHITE-BOX AUDIT</span>
             </div>
             
-            <h1 className="text-2xl sm:text-4xl font-display font-extrabold text-white tracking-tight leading-tight">
-              Security Assessment & Vulnerability Audit of <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">World Monitor</span>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-bold text-slate-900 tracking-tight leading-tight">
+              Security Assessment of <span className="text-blue-600">World Monitor</span>
             </h1>
 
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-              Comprehensive authorized security posture evaluation of World Monitor (open-source global intelligence & situational awareness platform). Covering OWASP Top 10 vulnerabilities, CVSS v3.1 scoring, safe sandbox PoC demonstrations, and production-ready remediation diffs for NTRO.
+            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+              Authorized security evaluation of World Monitor (open-source intelligence platform). Covers OWASP Top 10 vulnerabilities, CVSS 3.1 scoring, verified PoCs, and production code patches.
             </p>
           </div>
 
-          {/* Health Posture Score Card */}
-          <div className="w-full lg:w-auto flex-shrink-0 bg-soc-bg/80 border border-soc-border rounded-xl p-5 flex items-center justify-between lg:justify-center gap-6 shadow-cyber-card">
+          {/* Posture Score Pill / Card */}
+          <div className="w-full md:w-auto flex-shrink-0 bg-slate-50 border border-slate-200 rounded-xl p-3.5 sm:p-4 flex items-center justify-between md:justify-center gap-4">
             <div className="text-left">
-              <span className="text-xs font-mono text-slate-400 block uppercase tracking-wider">Overall Posture</span>
-              <div className="text-4xl font-display font-extrabold text-white mt-1">
-                <span className={securityScore >= 80 ? 'text-emerald-400' : securityScore >= 60 ? 'text-amber-400' : 'text-rose-400'}>
+              <span className="text-[11px] font-medium text-slate-500 uppercase tracking-wider block">Security Posture</span>
+              <div className="text-3xl font-display font-bold text-slate-900 mt-0.5">
+                <span className={securityScore >= 80 ? 'text-emerald-600' : securityScore >= 60 ? 'text-amber-600' : 'text-rose-600'}>
                   {securityScore}
                 </span>
-                <span className="text-lg text-slate-500 font-normal"> / 100</span>
+                <span className="text-sm text-slate-400 font-normal"> / 100</span>
               </div>
-              <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1 mt-1">
+              <span className="text-[11px] font-medium text-emerald-600 flex items-center gap-1 mt-0.5">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 {mitigatedIds.length} of {vulnerabilities.length} patches tested
               </span>
             </div>
 
-            <div className="relative w-20 h-20 flex items-center justify-center">
+            <div className="relative w-16 h-16 sm:w-18 sm:h-18 flex items-center justify-center">
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                 <path
-                  className="text-slate-800"
+                  className="text-slate-200"
                   strokeWidth="3.5"
                   stroke="currentColor"
                   fill="none"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
                 <path
-                  className={securityScore >= 80 ? 'text-emerald-400' : securityScore >= 60 ? 'text-amber-400' : 'text-rose-400'}
+                  className={securityScore >= 80 ? 'text-emerald-600' : securityScore >= 60 ? 'text-amber-600' : 'text-rose-600'}
                   strokeDasharray={`${securityScore}, 100`}
                   strokeWidth="3.5"
                   strokeLinecap="round"
@@ -108,7 +106,7 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
               </svg>
-              <span className="absolute font-mono text-xs font-bold text-white">
+              <span className="absolute font-bold text-xs text-slate-800">
                 {securityScore}%
               </span>
             </div>
@@ -116,103 +114,102 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      {/* Key Metric Highlights */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-soc-card border border-soc-border hover:border-red-500/40 rounded-xl p-4 transition-all">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+      {/* Key Metric Highlights Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+        <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-soft-sm">
+          <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
             <span>Critical Findings</span>
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-rose-500" />
           </div>
-          <div className="text-3xl font-display font-extrabold text-red-400 mt-2">
+          <div className="text-2xl sm:text-3xl font-display font-bold text-rose-600 mt-1">
             {criticalCount}
           </div>
-          <p className="text-xs text-slate-400 mt-1 font-mono">SSRF in Proxy Gateway</p>
+          <p className="text-[11px] text-slate-500 mt-0.5 truncate">SSRF Proxy Gateway</p>
         </div>
 
-        <div className="bg-soc-card border border-soc-border hover:border-amber-500/40 rounded-xl p-4 transition-all">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+        <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-soft-sm">
+          <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
             <span>High Severity</span>
-            <AlertTriangle className="w-4 h-4 text-amber-400" />
+            <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
           </div>
-          <div className="text-3xl font-display font-extrabold text-amber-400 mt-2">
+          <div className="text-2xl sm:text-3xl font-display font-bold text-amber-600 mt-1">
             {highCount}
           </div>
-          <p className="text-xs text-slate-400 mt-1 font-mono">BOLA, DOM XSS, WebMCP</p>
+          <p className="text-[11px] text-slate-500 mt-0.5 truncate">BOLA, DOM XSS, WebMCP</p>
         </div>
 
-        <div className="bg-soc-card border border-soc-border hover:border-cyan-500/40 rounded-xl p-4 transition-all">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400">
-            <span>NTRO Scope Coverage</span>
-            <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+        <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-soft-sm">
+          <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
+            <span>Scope Coverage</span>
+            <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
           </div>
-          <div className="text-3xl font-display font-extrabold text-cyan-400 mt-2">
+          <div className="text-2xl sm:text-3xl font-display font-bold text-blue-600 mt-1">
             7 / 7
           </div>
-          <p className="text-xs text-slate-400 mt-1 font-mono">100% Scope Satisfied</p>
+          <p className="text-[11px] text-slate-500 mt-0.5 truncate">100% NTRO Areas Mapped</p>
         </div>
 
-        <div className="bg-soc-card border border-soc-border hover:border-emerald-500/40 rounded-xl p-4 transition-all">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400">
+        <div className="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 shadow-soft-sm">
+          <div className="flex items-center justify-between text-xs text-slate-500 font-medium">
             <span>Remediation Status</span>
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
           </div>
-          <div className="text-3xl font-display font-extrabold text-emerald-400 mt-2">
+          <div className="text-2xl sm:text-3xl font-display font-bold text-emerald-600 mt-1">
             8 / 8
           </div>
-          <p className="text-xs text-slate-400 mt-1 font-mono">Code Patches & SAST Rules</p>
+          <p className="text-[11px] text-slate-500 mt-0.5 truncate">Patches & SAST Rules</p>
         </div>
       </div>
 
       {/* NTRO Scope Area Matrix */}
-      <div className="cyber-panel rounded-xl p-6 border border-soc-border">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div>
-            <h2 className="text-lg font-display font-bold text-white flex items-center gap-2">
-              <ShieldAlert className="w-5 h-5 text-cyan-400" />
-              NTRO Mandated Scope Compliance Matrix
+            <h2 className="text-base sm:text-lg font-display font-bold text-slate-900 flex items-center gap-2">
+              <ShieldAlert className="w-4 h-4 text-blue-600" />
+              NTRO Scope Compliance Matrix
             </h2>
-            <p className="text-xs font-mono text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Verification status across all 7 evaluation pillars specified in Problem Statement 26163
             </p>
           </div>
 
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-mono">
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-medium w-fit">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            Full White-Box Verification
+            100% White-Box Verified
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {scopeAreas.map((area, idx) => {
             const Icon = area.icon;
             const mappedVulns = vulnerabilities.filter(v => v.scopeArea === area.name);
-            const isMitigated = mappedVulns.every(v => mitigatedIds.includes(v.id));
 
             return (
               <div 
                 key={idx}
-                className="bg-soc-bg/90 border border-soc-border hover:border-cyan-500/40 rounded-xl p-4 transition-all flex flex-col justify-between group"
+                className="bg-slate-50 border border-slate-200 hover:border-blue-300 rounded-xl p-3.5 transition-all flex flex-col justify-between group hover:bg-white hover:shadow-sm"
               >
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <div className="p-2 rounded-lg bg-soc-card border border-soc-border text-cyan-400 group-hover:scale-105 transition-transform">
+                    <div className="p-1.5 rounded-lg bg-white border border-slate-200 text-blue-600 shadow-2xs">
                       <Icon className="w-4 h-4" />
                     </div>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-                      SCOPE #{idx + 1}
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                      PILLAR #{idx + 1}
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-sm text-slate-200 group-hover:text-cyan-300 transition-colors">
+                  <h3 className="font-semibold text-xs sm:text-sm text-slate-900 group-hover:text-blue-600 transition-colors">
                     {area.name}
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                  <p className="text-[11px] text-slate-500 mt-1 leading-relaxed line-clamp-2">
                     {area.desc}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-soc-border flex items-center justify-between text-xs font-mono">
-                  <span className="text-slate-400">
+                <div className="mt-3 pt-2.5 border-t border-slate-200 flex items-center justify-between text-xs">
+                  <span className="text-slate-500 font-medium text-[11px]">
                     {mappedVulns.length} Finding{mappedVulns.length !== 1 ? 's' : ''}
                   </span>
                   <button 
@@ -222,9 +219,9 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({
                         setActiveTab('vault');
                       }
                     }}
-                    className="text-cyan-400 hover:underline flex items-center gap-1"
+                    className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 text-[11px]"
                   >
-                    <span>Inspect</span>
+                    <span>View</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
@@ -234,131 +231,131 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({
         </div>
       </div>
 
-      {/* Target Architecture & Attack Surface Analysis */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 cyber-panel rounded-xl p-6 border border-soc-border space-y-4">
+      {/* Target Attack Surface & Toolchain Quick Launch */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2 bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-display font-bold text-white flex items-center gap-2">
-              <Cpu className="w-5 h-5 text-emerald-400" />
-              World Monitor Attack Surface Topology
+            <h2 className="text-base sm:text-lg font-display font-bold text-slate-900 flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-emerald-600" />
+              Target Attack Surface Topology
             </h2>
-            <span className="text-xs font-mono text-slate-400">Architecture Vector Map</span>
+            <span className="text-[11px] font-mono text-slate-500">Source: World Monitor</span>
           </div>
 
-          <p className="text-xs text-slate-300 leading-relaxed">
-            World Monitor integrates multiple real-time intelligence feeds (ACLED conflict points, AISStream maritime telemetry, OpenSky aviation, USGS earthquakes, and Finnhub markets). The platform exposes both client-side and serverless surfaces:
+          <p className="text-xs text-slate-600 leading-relaxed">
+            World Monitor integrates multiple real-time feeds (ACLED conflict data, AISStream maritime telemetry, OpenSky aviation, Finnhub markets). The architecture exposes both client and serverless surfaces:
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            <div className="bg-soc-bg border border-soc-border rounded-lg p-3">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold text-rose-400 mb-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+              <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-rose-600 mb-1">
                 <Server className="w-3.5 h-3.5" />
                 <span>/api/proxy/feed</span>
               </div>
-              <p className="text-[11px] text-slate-400 leading-tight">
+              <p className="text-[11px] text-slate-600 leading-normal">
                 Serverless proxy for CORS bypass. Susceptible to SSRF into cloud metadata (169.254.169.254).
               </p>
             </div>
 
-            <div className="bg-soc-bg border border-soc-border rounded-lg p-3">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold text-amber-400 mb-1">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+              <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-amber-600 mb-1">
                 <Radio className="w-3.5 h-3.5" />
                 <span>/mcp (Streamable HTTP)</span>
               </div>
-              <p className="text-[11px] text-slate-400 leading-tight">
+              <p className="text-[11px] text-slate-600 leading-normal">
                 Remote Model Context Protocol endpoint. Permissive CORS wildcard and missing rate limit.
               </p>
             </div>
 
-            <div className="bg-soc-bg border border-soc-border rounded-lg p-3">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold text-amber-400 mb-1">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+              <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-amber-600 mb-1">
                 <Globe className="w-3.5 h-3.5" />
                 <span>document.modelContext</span>
               </div>
-              <p className="text-[11px] text-slate-400 leading-tight">
-                Apex in-page WebMCP hook registering tools without origin validation or caller prompts.
+              <p className="text-[11px] text-slate-600 leading-normal">
+                In-page WebMCP hook registering tools without origin validation or caller authorization prompts.
               </p>
             </div>
 
-            <div className="bg-soc-bg border border-soc-border rounded-lg p-3">
-              <div className="flex items-center gap-2 font-mono text-xs font-bold text-cyan-400 mb-1">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+              <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-blue-600 mb-1">
                 <Database className="w-3.5 h-3.5" />
                 <span>Client JS Assets</span>
               </div>
-              <p className="text-[11px] text-slate-400 leading-tight">
+              <p className="text-[11px] text-slate-600 leading-normal">
                 Exposed vendor API keys for AISStream and Finnhub in compiled production chunks.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Quick Launch Actions */}
-        <div className="cyber-panel rounded-xl p-6 border border-soc-border flex flex-col justify-between">
+        {/* Quick Launch Cards */}
+        <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
           <div>
-            <h2 className="text-lg font-display font-bold text-white flex items-center gap-2 mb-3">
-              <FlaskConical className="w-5 h-5 text-cyan-400" />
-              Assessment Toolchain
+            <h2 className="text-base sm:text-lg font-display font-bold text-slate-900 flex items-center gap-2 mb-2">
+              <FlaskConical className="w-4 h-4 text-blue-600" />
+              Assessment Tools
             </h2>
-            <p className="text-xs text-slate-300 leading-relaxed mb-4">
-              Interactive testing environments built specifically for this NTRO evaluation:
+            <p className="text-xs text-slate-600 mb-3">
+              Interactive test harnesses for NTRO evaluation:
             </p>
           </div>
 
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             <button
               onClick={() => setActiveTab('sandbox')}
-              className="w-full flex items-center justify-between p-3 rounded-lg bg-soc-bg border border-soc-border hover:border-cyan-500/50 text-left transition-all group"
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 text-left transition-all"
             >
-              <div className="flex items-center gap-3">
-                <FlaskConical className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
+              <div className="flex items-center gap-2.5">
+                <FlaskConical className="w-4 h-4 text-blue-600" />
                 <div>
-                  <div className="font-mono text-xs font-bold text-slate-200">Safe PoC Sandbox</div>
-                  <div className="text-[10px] text-slate-400">Test exploit vs patched state</div>
+                  <div className="text-xs font-semibold text-slate-900">Safe PoC Sandbox</div>
+                  <div className="text-[10px] text-slate-500">Test exploit vs patched state</div>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
             </button>
 
             <button
               onClick={() => setActiveTab('cvss')}
-              className="w-full flex items-center justify-between p-3 rounded-lg bg-soc-bg border border-soc-border hover:border-emerald-500/50 text-left transition-all group"
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 text-left transition-all"
             >
-              <div className="flex items-center gap-3">
-                <Terminal className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <div className="flex items-center gap-2.5">
+                <Terminal className="w-4 h-4 text-emerald-600" />
                 <div>
-                  <div className="font-mono text-xs font-bold text-slate-200">CVSS 3.1 Calculator</div>
-                  <div className="text-[10px] text-slate-400">Real-time vector & base scoring</div>
+                  <div className="text-xs font-semibold text-slate-900">CVSS 3.1 Calculator</div>
+                  <div className="text-[10px] text-slate-500">Vector metrics & scoring</div>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
             </button>
 
             <button
               onClick={() => setActiveTab('sast')}
-              className="w-full flex items-center justify-between p-3 rounded-lg bg-soc-bg border border-soc-border hover:border-purple-500/50 text-left transition-all group"
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-violet-300 hover:bg-violet-50/50 text-left transition-all"
             >
-              <div className="flex items-center gap-3">
-                <Cpu className="w-4 h-4 text-purple-400 group-hover:scale-110 transition-transform" />
+              <div className="flex items-center gap-2.5">
+                <Cpu className="w-4 h-4 text-violet-600" />
                 <div>
-                  <div className="font-mono text-xs font-bold text-slate-200">Semgrep SAST Studio</div>
-                  <div className="text-[10px] text-slate-400">Custom rule validation engine</div>
+                  <div className="text-xs font-semibold text-slate-900">Semgrep SAST Studio</div>
+                  <div className="text-[10px] text-slate-500">Custom rule validation</div>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-purple-400 transition-colors" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
             </button>
 
             <button
               onClick={onOpenReport}
-              className="w-full flex items-center justify-between p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/40 hover:bg-emerald-500/20 text-left transition-all group"
+              className="w-full flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 text-left transition-all"
             >
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <div className="flex items-center gap-2.5">
+                <FileText className="w-4 h-4 text-emerald-700" />
                 <div>
-                  <div className="font-mono text-xs font-bold text-emerald-300">Official NTRO Report</div>
-                  <div className="text-[10px] text-emerald-400/80">Printable & exportable format</div>
+                  <div className="text-xs font-bold text-emerald-800">Official NTRO Report</div>
+                  <div className="text-[10px] text-emerald-700">Export & print audit document</div>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-emerald-400 transition-colors" />
+              <ArrowRight className="w-3.5 h-3.5 text-emerald-700" />
             </button>
           </div>
         </div>

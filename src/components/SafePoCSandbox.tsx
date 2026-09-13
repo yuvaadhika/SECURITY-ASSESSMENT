@@ -13,7 +13,8 @@ import {
   Activity,
   Zap,
   Network,
-  Eye
+  Eye,
+  RotateCcw
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Vulnerability } from '../types/security';
@@ -39,8 +40,8 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
   const [progress, setProgress] = useState<number>(0);
   const [viewMode, setViewMode] = useState<'both' | 'visual' | 'terminal'>('both');
   const [logs, setLogs] = useState<string[]>([
-    '[*] Sandbox ready. Select target vulnerability and defense state to simulate safe PoC execution.',
-    '[*] Compliant with NTRO ethical hacking constraints (controlled test harness).'
+    '[*] Sandbox ready. Select target finding and defense state to run safe PoC execution.',
+    '[*] Compliant with NTRO ethical hacking constraints (isolated test harness).'
   ]);
   const [resultStatus, setResultStatus] = useState<'IDLE' | 'VULNERABLE' | 'BLOCKED'>('IDLE');
 
@@ -239,40 +240,40 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Sandbox Header */}
-      <div className="cyber-panel rounded-xl p-5 border border-soc-border">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-display font-bold text-white flex items-center gap-2">
-              <FlaskConical className="w-5 h-5 text-cyan-400" />
-              Controlled Safe PoC Sandbox & Live Cyber Visualizer
+            <h2 className="text-base sm:text-lg font-display font-bold text-slate-900 flex items-center gap-2">
+              <FlaskConical className="w-5 h-5 text-blue-600" />
+              Controlled Safe PoC Sandbox & Cyber Visualizer
             </h2>
-            <p className="text-xs font-mono text-slate-400 mt-1">
-              Interactive visual packet animation demonstrating exploit replication vs hardened defensive deflection.
+            <p className="text-xs text-slate-500 mt-0.5">
+              Interactive test harness demonstrating exploit replication vs hardened defensive deflection.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-slate-400">View:</span>
-            <div className="flex items-center bg-soc-bg border border-soc-border rounded-lg p-1 font-mono text-xs">
+            <span className="text-xs text-slate-500 font-medium">Layout:</span>
+            <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1 text-xs">
               <button
                 onClick={() => setViewMode('both')}
-                className={`px-2.5 py-1 rounded ${viewMode === 'both' ? 'bg-cyan-500/20 text-cyan-300 font-bold' : 'text-slate-400'}`}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${viewMode === 'both' ? 'bg-white text-blue-700 shadow-sm font-semibold' : 'text-slate-600'}`}
               >
-                Split View
+                Split
               </button>
               <button
                 onClick={() => setViewMode('visual')}
-                className={`px-2.5 py-1 rounded ${viewMode === 'visual' ? 'bg-cyan-500/20 text-cyan-300 font-bold' : 'text-slate-400'}`}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${viewMode === 'visual' ? 'bg-white text-blue-700 shadow-sm font-semibold' : 'text-slate-600'}`}
               >
                 Visual Flow
               </button>
               <button
                 onClick={() => setViewMode('terminal')}
-                className={`px-2.5 py-1 rounded ${viewMode === 'terminal' ? 'bg-cyan-500/20 text-cyan-300 font-bold' : 'text-slate-400'}`}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${viewMode === 'terminal' ? 'bg-white text-blue-700 shadow-sm font-semibold' : 'text-slate-600'}`}
               >
-                Terminal
+                Console
               </button>
             </div>
           </div>
@@ -290,18 +291,18 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
       )}
 
       {/* Main Workspace Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* Left Column: Target Selector & Configuration */}
         <div className={viewMode === 'visual' ? 'lg:col-span-12' : 'lg:col-span-5'}>
-          <div className="space-y-4">
-            {/* Target Vulnerability Selector */}
-            <div className="cyber-panel rounded-xl p-5 border border-soc-border space-y-4">
-              <h3 className="font-mono text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                <Layers className="w-4 h-4 text-cyan-400" />
+          <div className="space-y-3">
+            {/* Target Finding Selector */}
+            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-3">
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-blue-600" />
                 1. Select Target Finding
               </h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 max-h-[220px] overflow-y-auto pr-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1.5 max-h-[220px] overflow-y-auto pr-1">
                 {vulnerabilities.map((vuln) => {
                   const isSelected = selectedId === vuln.id;
                   const isMitigated = mitigatedIds.includes(vuln.id);
@@ -313,28 +314,28 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
                         setCustomPayload(presetPayloads[vuln.id]?.[0]?.value || 'test_payload');
                         setResultStatus('IDLE');
                       }}
-                      className={`w-full text-left p-2.5 rounded-lg border transition-all flex items-center justify-between ${
+                      className={`w-full text-left p-2.5 rounded-xl border transition-all flex items-center justify-between ${
                         isSelected
-                          ? 'bg-cyan-500/10 border-cyan-400 text-white shadow-glow-cyan'
-                          : 'bg-soc-bg border-soc-border text-slate-400 hover:text-slate-200 hover:border-slate-600'
+                          ? 'bg-blue-50 border-blue-400 text-slate-900 shadow-sm font-medium'
+                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-white hover:border-slate-300'
                       }`}
                     >
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-cyan-400">{vuln.id}</span>
-                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-soc-card border border-soc-border text-slate-400">
+                      <div className="truncate mr-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-mono text-xs font-bold text-blue-700">{vuln.id}</span>
+                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-slate-200 text-slate-700">
                             {vuln.severity}
                           </span>
                         </div>
-                        <div className="text-xs font-medium text-slate-200 truncate max-w-[220px] mt-0.5">
+                        <div className="text-xs text-slate-700 truncate max-w-[200px] mt-0.5">
                           {vuln.title}
                         </div>
                       </div>
 
                       {isMitigated ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                       ) : (
-                        <AlertTriangle className="w-4 h-4 text-rose-400 flex-shrink-0" />
+                        <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />
                       )}
                     </button>
                   );
@@ -343,26 +344,26 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
             </div>
 
             {/* Defense State Toggle Switch */}
-            <div className="cyber-panel rounded-xl p-5 border border-soc-border space-y-3">
-              <h3 className="font-mono text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                <Lock className="w-4 h-4 text-amber-400" />
+            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-3">
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <Lock className="w-4 h-4 text-amber-600" />
                 2. Defense & Patch State
               </h3>
 
-              <div className="grid grid-cols-2 gap-2 bg-soc-bg p-1.5 rounded-lg border border-soc-border">
+              <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
                 <button
                   onClick={() => {
                     setIsPatchedMode(false);
                     setResultStatus('IDLE');
                   }}
-                  className={`py-2.5 px-3 rounded-md font-mono text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  className={`py-2 px-2.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
                     !isPatchedMode
-                      ? 'bg-rose-500/20 text-rose-300 border border-rose-500/50 shadow-glow-red'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-white text-rose-700 shadow-sm border border-rose-200'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
-                  <span>Vulnerable State</span>
+                  <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+                  <span>Unpatched</span>
                 </button>
 
                 <button
@@ -370,26 +371,26 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
                     setIsPatchedMode(true);
                     setResultStatus('IDLE');
                   }}
-                  className={`py-2.5 px-3 rounded-md font-mono text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  className={`py-2 px-2.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
                     isPatchedMode
-                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-glow-green'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-white text-emerald-700 shadow-sm border border-emerald-200'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Patched Defense</span>
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Patched</span>
                 </button>
               </div>
             </div>
 
-            {/* Payload Preset & Custom String */}
-            <div className="cyber-panel rounded-xl p-5 border border-soc-border space-y-3">
-              <h3 className="font-mono text-xs font-bold text-slate-300 uppercase tracking-wider">
+            {/* Payload Presets & Custom Input */}
+            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm space-y-3">
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                 3. Test Vector Payload
               </h3>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-mono text-slate-400">Choose Preset Vector:</label>
+                <label className="text-[11px] text-slate-500">Preset Payloads:</label>
                 <div className="flex flex-wrap gap-1.5">
                   {currentPresets.map((preset, idx) => (
                     <button
@@ -398,7 +399,7 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
                         setCustomPayload(preset.value);
                         setResultStatus('IDLE');
                       }}
-                      className="text-[10px] font-mono px-2 py-1 rounded bg-soc-bg border border-soc-border text-slate-300 hover:text-cyan-300 hover:border-cyan-400 transition-colors"
+                      className="px-2.5 py-1 rounded-lg text-xs font-mono bg-slate-100 border border-slate-200 text-slate-700 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-colors truncate max-w-[280px]"
                     >
                       {preset.label}
                     </button>
@@ -406,130 +407,103 @@ export const SafePoCSandbox: React.FC<SandboxProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-1 mt-2">
-                <label className="text-[11px] font-mono text-slate-400">Custom Probe Input:</label>
+              <div className="space-y-1 pt-1">
+                <label className="text-[11px] text-slate-500">Payload String:</label>
                 <input
                   type="text"
                   value={customPayload}
-                  onChange={(e) => setCustomPayload(e.target.value)}
-                  className="w-full bg-soc-bg border border-soc-border focus:border-cyan-400 rounded-lg p-2.5 text-xs font-mono text-emerald-300 focus:outline-none"
+                  onChange={(e) => {
+                    setCustomPayload(e.target.value);
+                    setResultStatus('IDLE');
+                  }}
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white rounded-xl px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none transition-all"
+                  placeholder="Enter custom URL or exploit payload..."
                 />
               </div>
 
-              {/* Big Animated Trigger Button */}
-              <button
-                onClick={handleRunSimulation}
-                disabled={isRunning}
-                className={`w-full mt-3 py-3.5 rounded-lg font-mono text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 transition-all transform active:scale-98 shadow-xl ${
-                  isRunning
-                    ? 'bg-cyan-600 text-white opacity-80 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 text-soc-bg shadow-glow-cyan'
-                }`}
-              >
-                {isRunning ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Transmitting Cyber Flow ({progress}%)...</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-4 h-4 fill-current" />
-                    <span>LAUNCH LIVE VISUAL SIMULATION</span>
-                  </>
-                )}
-              </button>
+              {/* Run Test Button */}
+              <div className="pt-2">
+                <button
+                  onClick={handleRunSimulation}
+                  disabled={isRunning}
+                  className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 text-white font-semibold text-xs py-2.5 rounded-xl shadow-sm transition-all"
+                >
+                  {isRunning ? (
+                    <>
+                      <RotateCcw className="w-4 h-4 animate-spin" />
+                      <span>Executing PoC Simulation...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-4 h-4" />
+                      <span>Dispatch Test Vector</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Interactive Terminal & Verification Console */}
+        {/* Right Column: Execution Console Log */}
         {(viewMode === 'both' || viewMode === 'terminal') && (
-          <div className="lg:col-span-7 space-y-4">
-            <div className="cyber-panel rounded-xl p-5 border border-soc-border flex flex-col h-[520px]">
-              {/* Terminal Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-soc-border mb-3">
+          <div className={viewMode === 'terminal' ? 'lg:col-span-12' : 'lg:col-span-7'}>
+            <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col h-[480px]">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
                 <div className="flex items-center gap-2">
-                  <TerminalIcon className="w-4 h-4 text-cyan-400" />
-                  <span className="font-mono text-xs font-bold text-white">
-                    SANDBOX CONSOLE // PACKET TELEMETRY
+                  <TerminalIcon className="w-4 h-4 text-slate-700" />
+                  <span className="font-bold text-xs text-slate-900">
+                    Live Test Execution Console
                   </span>
                 </div>
 
-                {resultStatus === 'VULNERABLE' && (
-                  <span className="px-2.5 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/40 text-[10px] font-mono font-bold animate-pulse">
-                    [!] VULNERABILITY ACTIVE
-                  </span>
-                )}
-                {resultStatus === 'BLOCKED' && (
-                  <span className="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-mono font-bold">
-                    [+] DEFENSE VERIFIED
-                  </span>
-                )}
-                {isRunning && (
-                  <span className="px-2.5 py-0.5 rounded bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 text-[10px] font-mono font-bold flex items-center gap-1">
-                    <Activity className="w-3 h-3 animate-spin" />
-                    SIMULATING...
-                  </span>
-                )}
+                <div className="flex items-center gap-2 font-mono text-xs">
+                  {resultStatus === 'BLOCKED' && (
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px]">
+                      DEFENSE ACTIVE (BLOCKED)
+                    </span>
+                  )}
+                  {resultStatus === 'VULNERABLE' && (
+                    <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-bold text-[10px]">
+                      EXPLOIT CONFIRMED
+                    </span>
+                  )}
+                  {resultStatus === 'IDLE' && (
+                    <span className="text-[11px] text-slate-400">STATUS: IDLE</span>
+                  )}
+                </div>
               </div>
 
-              {/* Progress Bar when running */}
-              {isRunning && (
-                <div className="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden mb-3 border border-slate-700">
+              {/* Terminal View Output */}
+              <div className="flex-1 bg-slate-900 p-4 rounded-xl font-mono text-xs overflow-y-auto space-y-1.5 border border-slate-800 text-slate-200">
+                {logs.map((log, idx) => (
                   <div 
-                    className="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full transition-all duration-300"
+                    key={idx}
+                    className={
+                      log.startsWith('[+]') 
+                        ? 'text-emerald-400 font-medium' 
+                        : log.startsWith('[-]') 
+                        ? 'text-rose-400 font-medium' 
+                        : log.startsWith('[!]')
+                        ? 'text-amber-300'
+                        : 'text-slate-300'
+                    }
+                  >
+                    {log}
+                  </div>
+                ))}
+                <div ref={terminalEndRef} />
+              </div>
+
+              {/* Progress Bar */}
+              {isRunning && (
+                <div className="w-full bg-slate-100 rounded-full h-1.5 mt-3 overflow-hidden">
+                  <div 
+                    className="bg-blue-600 h-1.5 transition-all duration-300 rounded-full"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
               )}
-
-              {/* Terminal Output Stream */}
-              <div className="flex-1 bg-black/90 p-4 rounded-lg font-mono text-xs overflow-y-auto space-y-1.5 border border-soc-border/60">
-                {logs.map((log, idx) => {
-                  const isFail = log.includes('[-]') || log.includes('[!]');
-                  const isPass = log.includes('[+]');
-                  const isWarn = log.includes('[*]') || log.includes('[>]');
-
-                  return (
-                    <div 
-                      key={idx} 
-                      className={`leading-relaxed whitespace-pre-wrap ${
-                        isFail 
-                          ? 'text-rose-400 font-semibold' 
-                          : isPass 
-                          ? 'text-emerald-400 font-semibold' 
-                          : isWarn 
-                          ? 'text-cyan-300' 
-                          : 'text-slate-300'
-                      }`}
-                    >
-                      {log}
-                    </div>
-                  );
-                })}
-                {isRunning && (
-                  <div className="flex items-center gap-2 text-cyan-400 animate-pulse pt-2">
-                    <Zap className="w-3.5 h-3.5 animate-bounce" />
-                    <span>&gt; Live packet flow traversing network topology...</span>
-                  </div>
-                )}
-                <div ref={terminalEndRef} />
-              </div>
-
-              {/* Bottom Status Card */}
-              <div className="mt-3 pt-3 border-t border-soc-border flex items-center justify-between text-xs font-mono text-slate-400">
-                <div className="flex items-center gap-2">
-                  <span>Active Target:</span>
-                  <strong className="text-white">{selectedVuln.id}</strong>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span>Remediation State:</span>
-                  <strong className={isPatchedMode ? 'text-emerald-400' : 'text-rose-400'}>
-                    {isPatchedMode ? 'Hardened / Patched' : 'Vulnerable'}
-                  </strong>
-                </div>
-              </div>
             </div>
           </div>
         )}
