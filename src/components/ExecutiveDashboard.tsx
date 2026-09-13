@@ -170,7 +170,7 @@ export const ExecutiveDashboard: React.FC<DashboardProps> = ({
               NTRO Scope Compliance Matrix
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Verification status across all 7 evaluation pillars specified in Problem Statement 26163
+              Verification status across all 7 evaluation pillars specified under NTRO Assessment Guidelines
             </p>
           </div>
 

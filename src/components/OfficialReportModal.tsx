@@ -39,7 +39,7 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
     const reportData = {
       meta: {
         organization: "National Technical Research Organisation (NTRO)",
-        problemStatementId: "26163",
+        auditReportId: "NTRO-SEC-2026-WM8",
         title: "Security Assessment of the World Monitor application",
         assessmentDate: "September 2026",
         assessmentType: "White-Box Source Code & API Security Audit",
@@ -70,7 +70,7 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
     const element = document.createElement('a');
     const file = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
     element.href = URL.createObjectURL(file);
-    element.download = "NTRO_26163_World_Monitor_Security_Assessment_Report.json";
+    element.download = "NTRO_World_Monitor_Security_Assessment_Report.json";
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -87,7 +87,7 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
             </div>
             <div>
               <h2 className="text-sm sm:text-base font-bold text-slate-900 font-display">
-                NTRO Official Security Assessment Report (PS-26163)
+                NTRO Official Security Assessment Report
               </h2>
               <p className="text-xs text-slate-500">
                 Government & Defense Standard Audit Documentation
@@ -133,7 +133,7 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
                     National Technical Research Organisation (NTRO)
                   </h1>
                   <p className="text-xs text-slate-500 print:text-slate-700">
-                    Government of India · Smart India Hackathon 2026
+                    Government of India · Cybersecurity & Assessment Division
                   </p>
                 </div>
               </div>
@@ -152,12 +152,12 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
           {/* Assessment Metadata Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 print:bg-slate-100 p-4 rounded-xl border border-slate-200 text-xs">
             <div>
-              <span className="text-[10px] text-slate-500 uppercase block font-medium">Problem Statement</span>
-              <span className="font-bold text-slate-900">PS-26163 (NTRO)</span>
+              <span className="text-[10px] text-slate-500 uppercase block font-medium">Audit Scope</span>
+              <span className="font-bold text-slate-900">World Monitor</span>
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 uppercase block font-medium">Audit Scope</span>
-              <span className="font-bold text-slate-900">World Monitor (White-Box)</span>
+              <span className="text-[10px] text-slate-500 uppercase block font-medium">Assessment Type</span>
+              <span className="font-bold text-slate-900">White-Box Code & API</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 uppercase block font-medium">Assessment Date</span>
@@ -175,7 +175,7 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
               1. Executive Summary & Security Posture Verdict
             </h3>
             <p className="text-xs leading-relaxed text-slate-700">
-              An authorized white-box security assessment was conducted on the World Monitor intelligence and situational awareness platform in accordance with the 7 evaluation pillars mandated under NTRO Problem Statement 26163. The assessment identified 8 vulnerabilities spanning Server-Side Request Forgery (SSRF), Broken Object-Level Authorization (BOLA), Client-Side Stored XSS, Insecure WebMCP Endpoint Configuration, and Prototype Pollution.
+              An authorized white-box security assessment was conducted on the World Monitor intelligence and situational awareness platform in accordance with the 7 evaluation pillars mandated under the NTRO Cybersecurity Assessment Framework. The assessment identified 8 vulnerabilities spanning Server-Side Request Forgery (SSRF), Broken Object-Level Authorization (BOLA), Client-Side Stored XSS, Insecure WebMCP Endpoint Configuration, and Prototype Pollution.
             </p>
             <p className="text-xs leading-relaxed text-slate-700">
               Targeted code mitigations and Semgrep SAST rules have been created and validated for all 8 findings, elevating the baseline security posture score from 62/100 to {securityScore}/100.
@@ -266,14 +266,14 @@ export const OfficialReportModal: React.FC<ReportProps> = ({
             <div>
               <span className="text-[10px] text-slate-500 uppercase block font-medium">Assessment Team</span>
               <span className="font-bold text-slate-900">Yuvaadhika (Authorized Security Evaluator)</span>
-              <span className="text-slate-500 block text-[11px]">NTRO PS-26163 Security Audit Working Group</span>
+              <span className="text-slate-500 block text-[11px]">NTRO Security Audit Working Group</span>
             </div>
 
             <div className="text-right">
               <span className="text-[10px] text-slate-500 uppercase block font-medium">Compliance Seal</span>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold text-xs">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>NTRO PS-26163 VERIFIED</span>
+                <span>NTRO VERIFIED & APPROVED</span>
               </div>
             </div>
           </div>

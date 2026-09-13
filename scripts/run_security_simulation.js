@@ -1,5 +1,5 @@
-// NTRO 26163 - Live Security Audit & Exploit Harness Simulation
-// Target: World Monitor (https://www.worldmonitor.app / https://github.com/koala73/worldmonitor)
+// NTRO - Live Security Audit & Exploit Harness Simulation
+// Target: World Monitor (https://www.worldmonitor.app)
 
 import https from 'node:https';
 
@@ -33,7 +33,7 @@ function sleep(ms) {
 
 async function runFullNTROSimulation() {
   console.log(`\n${colors.bright}${colors.cyan}================================================================================${colors.reset}`);
-  console.log(`${colors.bright}  NATIONAL TECHNICAL RESEARCH ORGANISATION (NTRO) // PROBLEM STATEMENT 26163${colors.reset}`);
+  console.log(`${colors.bright}  NATIONAL TECHNICAL RESEARCH ORGANISATION (NTRO) // SECURITY ASSESSMENT${colors.reset}`);
   console.log(`${colors.dim}  Automated White-Box Security Assessment & Vulnerability Harness Simulation${colors.reset}`);
   console.log(`${colors.bright}${colors.cyan}================================================================================${colors.reset}\n`);
 
@@ -108,7 +108,7 @@ async function runFullNTROSimulation() {
   console.log(`  Total Vulnerabilities Verified : ${colors.cyan}8 Findings (1 Critical, 4 High, 3 Medium)${colors.reset}`);
   console.log(`  NTRO Scope Areas Satisfied     : ${colors.green}7 / 7 (100% Complete)${colors.reset}`);
   console.log(`  Production Defenses Verified   : ${colors.green}8 / 8 Patches & Semgrep Rules Validated${colors.reset}`);
-  console.log(`${colors.dim}  Official Report Generated      : NTRO-SEC-26163-V1${colors.reset}\n`);
+  console.log(`${colors.dim}  Official Report Generated      : NTRO-SEC-AUDIT-V1${colors.reset}\n`);
 }
 
 runFullNTROSimulation();

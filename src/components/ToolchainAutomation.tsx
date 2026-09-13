@@ -57,7 +57,7 @@ export const ToolchainAutomation: React.FC = () => {
       '[*] Scanning client JS bundles for embedded API keys & secrets...',
       '[-] FAIL: Hardcoded secret found in /assets/welcome-DKWBhdSm.js: AISStream API Token (1 occurrence)',
       '======================================================================',
-      '  NTRO 26163 - WORLD MONITOR SECURITY AUDIT SUMMARY REPORT',
+      '  NTRO - WORLD MONITOR SECURITY AUDIT SUMMARY REPORT',
       '======================================================================',
       'Target URL: https://www.worldmonitor.app',
       'Total Findings Identified: 3 High/Critical Anomalies Flagged',
@@ -83,7 +83,7 @@ export const ToolchainAutomation: React.FC = () => {
               Toolchain Integration & Automation Suite
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Production-ready Python automation scripts, Postman API collections, and Burp Suite configurations for NTRO PS-26163.
+              Production-ready Python automation scripts, Postman API collections, and Burp Suite configurations for NTRO Security Audit.
             </p>
           </div>
 

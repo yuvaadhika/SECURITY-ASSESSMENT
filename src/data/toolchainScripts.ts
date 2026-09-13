@@ -5,9 +5,9 @@ export const PYTHON_AUDIT_SCRIPTS = [
     description: 'Comprehensive Python white-box & black-box assessment script targeting World Monitor APIs, SSRF proxies, CORS endpoints, and bundle secret scanning.',
     code: `#!/usr/bin/env python3
 """
-National Technical Research Organisation (NTRO) - Problem Statement 26163
+National Technical Research Organisation (NTRO) - Security Assessment
 Automated Security Assessment Script for World Monitor Application
-Author: NTRO Assessment Team (Yuvaadhika)
+Author: Assessment Team (Yuvaadhika)
 Target: World Monitor Application
 """
 
@@ -23,7 +23,7 @@ class WorldMonitorSecurityAuditor:
         self.base_url = base_url.rstrip("/")
         self.session = requests.Session()
         self.session.headers.update({
-            "User-Agent": "NTRO-Security-Auditor/2.0 (Authorized SIH Assessment)"
+            "User-Agent": "NTRO-Security-Auditor/2.0 (Security Assessment)"
         })
         self.verbose = verbose
         self.findings: List[Dict[str, Any]] = []
@@ -114,7 +114,7 @@ class WorldMonitorSecurityAuditor:
 
     def generate_report(self):
         print("\\n" + "="*70)
-        print("  NTRO 26163 - WORLD MONITOR SECURITY AUDIT SUMMARY REPORT")
+        print("  NTRO - WORLD MONITOR SECURITY AUDIT SUMMARY REPORT")
         print("="*70)
         print(f"Target URL: {self.base_url}")
         print(f"Total Findings Identified: {len(self.findings)}")
@@ -167,9 +167,9 @@ if __name__ == "__main__":
 
 export const POSTMAN_COLLECTION_JSON = {
   info: {
-    name: "NTRO-26163-World-Monitor-Security-Assessment",
+    name: "NTRO-World-Monitor-Security-Assessment",
     _postman_id: "e48192a8-38bc-4901-9928-1a9981273901",
-    description: "Authorized Security Assessment & Vulnerability Audit Collection for World Monitor (NTRO PS-26163)",
+    description: "Authorized Security Assessment & Vulnerability Audit Collection for World Monitor",
     schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   item: [

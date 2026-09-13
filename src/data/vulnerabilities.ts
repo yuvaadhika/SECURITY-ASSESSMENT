@@ -261,7 +261,7 @@ XSS_FEED_CONTENT = """<?xml version="1.0" encoding="UTF-8"?>
     <item>
       <title><![CDATA[BREAKING: Strait Closure <svg onload="alert('XSS Exploit Successful: ' + document.cookie)">]]></title>
       <link>https://target-monitor.app/news/1</link>
-      <description>Test PoC for SIH PS 26163</description>
+      <description>Security Assessment PoC Feed</description>
     </item>
   </channel>
 </rss>"""

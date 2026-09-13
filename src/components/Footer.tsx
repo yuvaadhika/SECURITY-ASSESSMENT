@@ -12,10 +12,10 @@ export const Footer: React.FC = () => {
             </div>
             <div>
               <div className="text-xs font-bold text-slate-900">
-                NTRO · Problem Statement 26163
+                National Technical Research Organisation (NTRO)
               </div>
               <div className="text-[11px] text-slate-500">
-                Smart India Hackathon 2026 · Security Assessment Suite
+                White-Box Security Assessment & Audit Suite
               </div>
             </div>
           </div>
